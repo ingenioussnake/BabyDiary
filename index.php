@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <title>宝宝日记</title>
     <link rel="stylesheet" href="./style/weui.min.css"/>
-    <link rel="stylesheet" href="./style/index.css"/>
+    <link rel="stylesheet" href="./style/common.css"/>
 </head>
 <?php
 

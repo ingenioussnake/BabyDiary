@@ -3,28 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>睡觉</title>
+    <title>宝宝的一天</title>
     <link rel="stylesheet" href="../style/weui.min.css"/>
-    <link rel="stylesheet" href="../style/index.css"/>
+    <link rel="stylesheet" href="../style/common.css"/>
     <link rel="stylesheet" href="../style/timeline/style.css"/>
     <style type="text/css">
-        .page {
-            height: 100%;
-        }
         .weui_cells {
             margin-top: 0px;
-        }
-        .weui_cell.header:before {
-            left: 0;
         }
         .timeline_container {
             background: #c2edf4 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAI0lEQVQIW2P8DwSMQMCABBhBgiA+sgRYBboEXBuyBIpZMAkAW1YUAh9deX8AAAAASUVORK5CYII=) repeat-x top left;
         }
         .timeline {
             width: 100%;
-        }
-        p.item_tlb {
-
         }
         p.item_tlb a {
             width: 1.5rem;
@@ -41,20 +32,26 @@
             background-image: url("../images/delete.png");
         }
     </style>
+    <script type="text/javascript">
+        function addLog (text) {
+            $(".log").append($("<div>"+text+"</div>"));
+        }
+    </script>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
     <script src="../js/action.js"></script>
     <script src="../js/ModernizrTimeline.js"></script>
     <script src="../js/timeline.js"></script>
+    
 </head>
 
-<body>
-    <div class="container">
-        <div class="page slideIn cell">
+<body ontouchstart>
+    <div class="container js_container">
+        <div class="slideIn cell">
+            <div class="hd">
+                <h1 class="page_title">苇杭</h1>
+            </div>
             <div class="bd">
                 <div class="weui_cells weui_cells_form">
-                    <div class="hd">
-                        <h1 class="page_title">苇杭</h1>
-                    </div>
                     <div class="weui_cell header weui_cell_select">
                         <div class="weui_cell_bd weui_cell_primary">
                             <select class="weui_select" name="date" id="date_slt">
