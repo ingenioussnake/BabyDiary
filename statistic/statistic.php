@@ -19,7 +19,7 @@
         if ($mysqli->connect_errno) {
             echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
-        $result = $mysqli->query("select date from dining UNION select date from sleep UNION select date from shit");
+        $result = $mysqli->query("select date from dining UNION select date from sleep UNION select date from shit ORDER BY date DESC");
         $rows = array();
         while ($row = $result->fetch_assoc()) {
             array_push($rows, $row["date"]);

@@ -61,7 +61,31 @@
         return $result;
     }
 
-    function updateAction ($data) {}
+    function updateAction ($data) {
+        $mysqli = new mysqli("localhost", "baby", "leed", "baby_diary");
+        if ($mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+        $set = "";
+        foreach ($data as $key => $value) {
+            if ($key != "id" && $key != "type" && $key != "baby") {
+                $set .= $key . " = '" . $value . "', ";
+            }
+        }
+        $set = substr($set, 0, -2); // remove the last ", "
+        echo "UPDATE ". $data["type"]. " SET " . $set . " WHERE id = ". $data["id"];
+        $result = $mysqli->query("UPDATE ". $data["type"]. " SET " . $set . " WHERE id = ". $data["id"]);
+        $mysqli->close();
+        return $result;
+    }
 
-    function removeAction ($data) {}
+    function removeAction ($data) {
+        $mysqli = new mysqli("localhost", "baby", "leed", "baby_diary");
+        if ($mysqli->connect_errno) {
+            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
+        }
+        $result = $mysqli->query("DELETE FROM ". $data["type"]. " WHERE id = ". $data["id"]);
+        $mysqli->close();
+        return $result;
+    }
 ?>

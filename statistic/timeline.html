@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>睡觉</title>
+    <link rel="stylesheet" href="../style/weui.min.css"/>
+    <link rel="stylesheet" href="../style/index.css"/>
+    <link rel="stylesheet" href="../style/timeline/style.css"/>
+    <style type="text/css">
+        .page {
+            height: 100%;
+        }
+        .weui_cells {
+            margin-top: 0px;
+        }
+        .weui_cell.header:before {
+            left: 0;
+        }
+        .timeline_container {
+            background: #c2edf4 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAI0lEQVQIW2P8DwSMQMCABBhBgiA+sgRYBboEXBuyBIpZMAkAW1YUAh9deX8AAAAASUVORK5CYII=) repeat-x top left;
+        }
+        .timeline {
+            width: 100%;
+        }
+        p.item_tlb {
+
+        }
+        p.item_tlb a {
+            width: 1.5rem;
+            height: 1.5rem;
+            display: inline-block;
+            margin-left: 0.5rem;
+            margin-right: 0.5rem;
+            background-size: contain;
+        }
+        p.item_tlb a.edit {
+            background-image: url("../images/edit.png");
+        }
+        p.item_tlb a.delete {
+            background-image: url("../images/delete.png");
+        }
+    </style>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
+    <script src="../js/action.js"></script>
+    <script src="../js/ModernizrTimeline.js"></script>
+    <script src="../js/timeline.js"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="page slideIn cell">
+            <div class="bd">
+                <div class="weui_cells weui_cells_form">
+                    <div class="hd">
+                        <h1 class="page_title">苇杭</h1>
+                    </div>
+                    <div class="weui_cell header weui_cell_select">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <select class="weui_select" name="date" id="date_slt">
+                            </select>
+                        </div>
+                    </div>
+                    <div class="weui_cell timeline_container" id="content_tl">
+                        <ul class="timeline">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="weui_dialog_confirm" id="edit_dialog" style="display: none;">
+            <div class="weui_mask"></div>
+            <div class="weui_dialog">
+                <div class="weui_dialog_bd"></div>
+                <div class="weui_dialog_ft">
+                    <a href="javascript:;" class="weui_btn_dialog default">取消</a>
+                    <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+                </div>
+            </div>
+        </div>
+        <div class="weui_dialog_alert" id="delete_dialog" style="display: none;">
+            <div class="weui_mask"></div>
+            <div class="weui_dialog">
+                <div class="weui_dialog_hd"><strong class="weui_dialog_title">即将删除</strong></div>
+                <div class="weui_dialog_bd">确认删除该条记录</div>
+                <div class="weui_dialog_ft">
+                    <a href="javascript:;" class="weui_btn_dialog default">取消</a>
+                    <a href="javascript:;" class="weui_btn_dialog primary">确定</a>
+                </div>
+            </div>
+        </div>
+        <div id="toast" style="display: none;">
+            <div class="weui_mask_transparent"></div>
+            <div class="weui_toast">
+                <i class="weui_icon_toast"></i>
+                <p class="weui_toast_content">已完成</p>
+            </div>
+        </div>
+    </div>
+</body>
