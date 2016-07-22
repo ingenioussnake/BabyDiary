@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>睡觉</title>
+    <link rel="stylesheet" href="../style/weui.min.css"/>
+    <link rel="stylesheet" href="../style/index.css"/>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var DINING_LIST_ITEM_TMPL = "<div class='weui_cell action_item'>" +
+                        "<div class='weui_cell_bd weui_cell_primary'>" +
+                            "<p class='dining_start'></p>" +
+                            "<p class='dining_end'></p>" +
+                        "</div>" +
+                        "<div class='weui_cell_ft dining_type'></div>" +
+                    "</div>";
+            var SLEEP_LIST_ITEM_TMPL = "<div class='weui_cell action_item'>" +
+                        "<div class='weui_cell_bd weui_cell_primary'>" +
+                            "<p class='sleep_start'></p>" +
+                            "<p class='sleep_end'></p>" +
+                        "</div>" +
+                    "</div>";
+            var SHIT_LIST_ITEM_TMPL = "<div class='weui_cell action_item'>" +
+                        "<div class='weui_cell_bd weui_cell_primary'>" +
+                            "<p></p>" +
+                        "</div>" +
+                    "</div>";
+            var list;
+
+            $.get("./statistic.php", {type: "date"}, function(data){
+                console.log(data);
+                if (data.length > 0) {
+                    addDate(data);
+                    getList();
+                }
+            }, "json");
+
+            $("#date").on("change", getList);
+
+            $("#action").on("change", getList);
+
+            function addDate (data) {
+                var $date = $("#date");
+                $date.empty();
+                for (var i = 0; i < data.length; i++) {
+                    var $option = $("<option />");
+                    $option.val(data[i]);
+                    $option.html(data[i]);
+                    $date.append($option);
+                }
+            }
+
+            function addItems (action, data) {
+                var $list = $("#content"),
+                    generator;
+                if (action === "dining") {
+                    generator = addDiningItem;
+                } else if (action === "sleep") {
+                    generator = addSleepItem;
+                } else if (action === "shit") {
+                    generator = addShitItem;
+                }
+                for (var i = 0; i < data.length; i++) {
+                    $list.append(generator(data[i]))
+                }
+            }
+
+            function getList () {
+                var action = $("#action").val(),
+                    date = $("#date").val();
+                $.get("./statistic.php", {type: action, date: date}, function(data){
+                    console.log(data);
+                    $("#content").empty();
+                    if (data.length > 0) {
+                        list = data;
+                        addItems(action, data);
+                    }
+                }, "json");
+            }
+
+            function addDiningItem (row) {
+                var $item = $(DINING_LIST_ITEM_TMPL);
+                $("p.dining_start", $item).html(row.start);
+                $("p.dining_end", $item).html(row.end);
+                $(".dining_type", $item).html(row.mm == "1" ? "母乳" : "配方");
+                return $item;
+            }
+
+            function addSleepItem (row) {
+                var $item = $(SLEEP_LIST_ITEM_TMPL);
+                $("p.sleep_start", $item).html(row.start);
+                $("p.sleep_end", $item).html(row.end);
+                return $item;
+            }
+
+            function addShitItem (row) {
+                var $item = $(SHIT_LIST_ITEM_TMPL);
+                $("p", $item).html(row.time);
+                return $item;
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="page slideIn cell">
+            <div class="bd">
+                <div class="weui_cells weui_cells_form">
+                    <div class="hd">
+                        <h1 class="page_title">苇杭</h1>
+                    </div>
+                    <div class="weui_cell">
+                        <div class="weui_cell weui_cell_select" style="width: 70%">
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <select class="weui_select" name="date" id="date">
+                                </select>
+                            </div>
+                        </div>
+                        <div class="weui_cell weui_cell_select" style="width: 30%">
+                            <div class="weui_cell_bd weui_cell_primary">
+                                <select class="weui_select" name="action" id="action">
+                                    <option selected="" value="dining">吃饭</option>
+                                    <option value="sleep">睡觉</option>
+                                    <option value="shit">拉臭</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="weui_cells" id="content">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

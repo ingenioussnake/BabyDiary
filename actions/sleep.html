@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>睡觉</title>
+    <link rel="stylesheet" href="../style/weui.min.css"/>
+    <link rel="stylesheet" href="../style/index.css"/>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
+    <script src="../js/action.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            var $date = $("#date"),
+                $start = $("#start"),
+                curr = new Date();
+            $date.val(getDate(curr));
+            $start.val(getTime(curr));
+
+            var $submit = $("#submit");
+            $submit.on("click", function(){
+                addEndTime();
+                console.log(gatherData());
+                $.post("./dba.php", {
+                    type: "sleep",
+                    data: gatherData()
+                }, function(respond){
+                    !!respond && showToast();
+                });
+            });
+        });
+
+        function gatherData () {
+            return {
+                date: $("#date").val(),
+                start: $("#start").val() + ":00",
+                end: $("#end").val() + ":00"
+            };
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="page slideIn cell">
+            <div class="hd">
+                <h1 class="page_title">宝宝睡觉咯</h1>
+            </div>
+            <div class="bd">
+                <div class="weui_cells weui_cells_form">
+                    <div class="weui_cell">
+                        <div class="weui_cell_hd"><label class="weui_label" for="">日期</label></div>
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <input id="date" class="weui_input" type="date" value="">
+                        </div>
+                    </div>
+                    <div class="weui_cell">
+                        <div class="weui_cell_hd"><label class="weui_label" for="">开始</label></div>
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <input id="start" class="weui_input" type="time" placeholder="" value="">
+                        </div>
+                    </div>
+                    <div class="weui_cell">
+                        <div class="weui_cell_hd"><label class="weui_label" for="">结束</label></div>
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <input id="end" class="weui_input" type="time" placeholder="" value="">
+                        </div>
+                    </div>
+                    <a id="submit" class="weui_btn weui_btn_primary" href="javascript:;">完成</a>
+                </div>
+            </div>
+            <div id="toast" style="display: none;">
+                <div class="weui_mask_transparent"></div>
+                <div class="weui_toast">
+                    <i class="weui_icon_toast"></i>
+                    <p class="weui_toast_content">已完成</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
