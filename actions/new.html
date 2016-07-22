@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>吃饭</title>
+    <title>有事情喽</title>
     <link rel="stylesheet" href="../style/weui.min.css"/>
     <link rel="stylesheet" href="../style/index.css"/>
     <style type="text/css">
@@ -23,6 +23,11 @@
     <script src="../js/action.js"></script>
     <script type="text/javascript">
         $(function(){
+            var TITLE = {
+                dining: "宝宝吃饭咯",
+                sleep: "宝宝睡觉咯",
+                shit: "宝宝拉臭咯"
+            }
             var action = getUrlParam("type") || "dining";
             $(".bd").load("./" + action + "_fragment.html", function(respond){
                 if (!respond) return;
@@ -44,6 +49,8 @@
                     !!respond && showToast();
                 });
             });
+
+            $(".page_title").html(TITLE[action]);
         });
     </script>
 </head>
@@ -52,7 +59,7 @@
     <div class="container">
         <div class="page slideIn cell">
             <div class="hd">
-                <h1 class="page_title">宝宝吃饭咯</h1>
+                <h1 class="page_title"></h1>
             </div>
             <div class="bd">
             </div>
