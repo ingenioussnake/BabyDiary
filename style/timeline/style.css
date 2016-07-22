@@ -49,6 +49,7 @@
 	-o-transform: scale(0.8) translateX(24px);
 	-ms-transform: scale(0.8) translateX(24px);
 	transform: scale(0.8) translateX(24px);
+	background-size: contain;
 }
 
 .thumb:before {
@@ -74,38 +75,21 @@
 	bottom: -30px;
 }
 
-.user-1 {
-	background-image: url(../images/1.jpg);
+.type_fm {
+	background-image: url(../../images/fm.jpg);
 }
 
-.user-2 {
-	background-image: url(../images/2.jpg);
+.type_mm {
+	background-image: url(../../images/mm.jpg);
 }
 
-.user-3 {
-	background-image: url(../images/3.jpg);
+.type_shit {
+	background-image: url(../../images/shit.jpg);
 }
 
-.user-4 {
-	background-image: url(../images/4.jpg);
+.type_sleep {
+	background-image: url(../../images/sleep.jpg);
 }
-
-.user-5 {
-	background-image: url(../images/5.jpg);
-}
-
-.user-6 {
-	background-image: url(../images/6.jpg);
-}
-
-.user-7 {
-	background-image: url(../images/7.jpg);
-}
-
-.user-8 {
-	background-image: url(../images/8.jpg);
-}
-
 /* Transparent Checkbox/radio hack: leave the checkbox on top, hide it with opacity 0 */
 
 .event label,
@@ -372,9 +356,9 @@
 	}
 
 	.event input[type="radio"] {
-		width: 100px;
-		height: 100px;
-		left: 0px;
+		width: 50px;
+		height: 50px;
+		left: 25px;
 		top: 0px;
 	}
 

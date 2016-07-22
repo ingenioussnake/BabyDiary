@@ -6,27 +6,44 @@
     <title>睡觉</title>
     <link rel="stylesheet" href="../style/weui.min.css"/>
     <link rel="stylesheet" href="../style/index.css"/>
+    <link rel="stylesheet" href="../style/timeline/style.css"/>
+    <style type="text/css">
+        .weui_cells {
+            margin-top: 0px;
+        }
+        .weui_cell.header:before {
+            left: 0;
+        }
+        .timeline_container {
+            background: #c2edf4 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAI0lEQVQIW2P8DwSMQMCABBhBgiA+sgRYBboEXBuyBIpZMAkAW1YUAh9deX8AAAAASUVORK5CYII=) repeat-x top left;
+        }
+        .timeline {
+            width: 100%;
+        }
+    </style>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
+    <script src="../js/timeline.js"></script>
     <script type="text/javascript">
         $(function(){
-            var DINING_LIST_ITEM_TMPL = "<div class='weui_cell action_item'>" +
-                        "<div class='weui_cell_bd weui_cell_primary'>" +
-                            "<p class='dining_start'></p>" +
-                            "<p class='dining_end'></p>" +
-                        "</div>" +
-                        "<div class='weui_cell_ft dining_type'></div>" +
-                    "</div>";
-            var SLEEP_LIST_ITEM_TMPL = "<div class='weui_cell action_item'>" +
-                        "<div class='weui_cell_bd weui_cell_primary'>" +
-                            "<p class='sleep_start'></p>" +
-                            "<p class='sleep_end'></p>" +
-                        "</div>" +
-                    "</div>";
-            var SHIT_LIST_ITEM_TMPL = "<div class='weui_cell action_item'>" +
-                        "<div class='weui_cell_bd weui_cell_primary'>" +
-                            "<p></p>" +
-                        "</div>" +
-                    "</div>";
+            var LIST_ITEM_TMPL = "<li class='event'>"+
+                            "<input type='radio' name='tl-group' checked/>"+
+                            "<label></label>"+
+                            "<div class='thumb'><span></span></div>"+
+                            "<div class='content-perspective'>"+
+                                "<div class='content'>"+
+                                    "<div class='content-inner'>"+
+                                        "<h3></h3>"+
+                                    "</div>"+
+                                "</div>"+
+                            "</div>"+
+                        "</li>"
+
+            var DINING_LIST_ITEM_TMPL = "<div><p><span>开始<span class='from'></span></span></p>" +
+                                        "<p><span>结束<span class='to'></span></span></p></div>";
+            var SLEEP_LIST_ITEM_TMPL =  "<div><p>开始</p>" +
+                                        "<p class='from'></p>" +
+                                        "<p>结束</p>" +
+                                        "<p class='to'></p></div>";
             var list;
 
             $.get("./statistic.php", {type: "date"}, function(data){
@@ -52,52 +69,65 @@
                 }
             }
 
-            function addItems (action, data) {
-                var $list = $("#content"),
-                    generator;
-                if (action === "dining") {
-                    generator = addDiningItem;
-                } else if (action === "sleep") {
-                    generator = addSleepItem;
-                } else if (action === "shit") {
-                    generator = addShitItem;
-                }
-                for (var i = 0; i < data.length; i++) {
-                    $list.append(generator(data[i]))
-                }
-            }
-
             function getList () {
-                var action = $("#action").val(),
-                    date = $("#date").val();
-                $.get("./statistic.php", {type: action, date: date}, function(data){
-                    console.log(data);
-                    $("#content").empty();
+                var date = $("#date").val();
+                $.get("./statistic.php", {type: "list", date: date}, function(data){
+                    $(".timeline").empty();
                     if (data.length > 0) {
                         list = data;
-                        addItems(action, data);
+                        data.sort(function(a, b){
+                            return new Date(a.date + " " + (a.start || a.time)) - new Date(b.date + " " + (b.start || b.time));
+                        });
+                        console.log(data);
+                        addItems(data);
                     }
                 }, "json");
             }
 
-            function addDiningItem (row) {
-                var $item = $(DINING_LIST_ITEM_TMPL);
-                $("p.dining_start", $item).html(row.start);
-                $("p.dining_end", $item).html(row.end);
-                $(".dining_type", $item).html(row.mm == "1" ? "母乳" : "配方");
+            function addItems (data) {
+                var $list = $(".timeline"),
+                    action, item,
+                    generator;
+                for (var i = 0; i < data.length; i++) {
+                    item = data[i];
+                    action = item.type;
+                    if (action === "dining") {
+                        generator = addDiningItem;
+                    } else if (action === "sleep") {
+                        generator = addSleepItem;
+                    } else if (action === "shit") {
+                        generator = addShitItem;
+                    }
+                    $list.prepend(generator($(LIST_ITEM_TMPL), item));
+                }
+            }
+
+            function addDiningItem ($item, row) {
+                var $diningItem = $(DINING_LIST_ITEM_TMPL);
+                $(".content-inner h3", $item).html(row.mm == "1" ? "母乳" : "配方");
+                $(".thumb", $item).addClass(row.mm == "1" ? "type_mm" : "type_fm");
+                $(".thumb span", $item).html(row.end);
+                $(".from", $diningItem).html(row.start);
+                $(".to", $diningItem).html(row.end);
+                $(".content-inner", $item).append($diningItem);
                 return $item;
             }
 
-            function addSleepItem (row) {
-                var $item = $(SLEEP_LIST_ITEM_TMPL);
-                $("p.sleep_start", $item).html(row.start);
-                $("p.sleep_end", $item).html(row.end);
+            function addSleepItem ($item, row) {
+                var $sleepItem = $(SLEEP_LIST_ITEM_TMPL);
+                $(".content-inner h3", $item).html("睡觉");
+                $(".thumb", $item).addClass("type_sleep");
+                $(".thumb span", $item).html(row.end);
+                $(".from", $sleepItem).html(row.start);
+                $(".to", $sleepItem).html(row.end);
+                $(".content-inner", $item).append($sleepItem);
                 return $item;
             }
 
-            function addShitItem (row) {
-                var $item = $(SHIT_LIST_ITEM_TMPL);
-                $("p", $item).html(row.time);
+            function addShitItem ($item, row) {
+                $(".thumb", $item).addClass("type_shit");
+                $(".content-inner h3", $item).html("好臭");
+                $(".thumb span", $item).html(row.time);
                 return $item;
             }
         });
@@ -112,24 +142,15 @@
                     <div class="hd">
                         <h1 class="page_title">苇杭</h1>
                     </div>
-                    <div class="weui_cell">
-                        <div class="weui_cell weui_cell_select" style="width: 70%">
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <select class="weui_select" name="date" id="date">
-                                </select>
-                            </div>
-                        </div>
-                        <div class="weui_cell weui_cell_select" style="width: 30%">
-                            <div class="weui_cell_bd weui_cell_primary">
-                                <select class="weui_select" name="action" id="action">
-                                    <option selected="" value="dining">吃饭</option>
-                                    <option value="sleep">睡觉</option>
-                                    <option value="shit">拉臭</option>
-                                </select>
-                            </div>
+                    <div class="weui_cell header weui_cell_select">
+                        <div class="weui_cell_bd weui_cell_primary">
+                            <select class="weui_select" name="date" id="date">
+                            </select>
                         </div>
                     </div>
-                    <div class="weui_cells" id="content">
+                    <div class="weui_cell timeline_container" id="content_tl">
+                        <ul class="timeline">
+                        </ul>
                     </div>
                 </div>
             </div>

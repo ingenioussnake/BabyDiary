@@ -9,8 +9,8 @@
             echo getDates();
             break;
 
-        default:
-            echo getList($type, $_GET["date"]);
+        case 'list':
+            echo getList($_GET["date"]);
             break;
     }
 
@@ -28,15 +28,19 @@
         return json_encode($rows);
     }
 
-    function getList ($type, $date) {
+    function getList ($date) {
         $mysqli = new mysqli("localhost", "baby", "leed", "baby_diary");
         if ($mysqli->connect_errno) {
             echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
         }
-        $result = $mysqli->query("select * from " . $type . " WHERE baby = 1 AND date = '" . $date. "'");
+        $types = array("dining", "sleep", "shit");
         $rows = array();
-        while ($row = $result->fetch_assoc()) {
-            array_push($rows, $row);
+        foreach ($types as $type) {
+            $result = $mysqli->query("select * from " . $type . " WHERE baby = 1 AND date = '" . $date. "'");
+            while ($row = $result->fetch_assoc()) {
+                $row["type"] = $type;
+                array_push($rows, $row);
+            }
         }
         $mysqli->close();
         return json_encode($rows);
