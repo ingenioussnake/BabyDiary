@@ -25,16 +25,16 @@
     }
 
     function getList ($date) {
-        $types = array("dining", "sleep", "shit");
-        $results = array();
         global $dba;
+        $types = array("dining", "sleep", "shit");
+        $rows = array();
         foreach ($types as $type) {
-            $result = $dba->query("select * from " . $type . " WHERE baby = 1 AND date = '" . $date. "'", function($row){
-                global $type;
+            $result = $dba->exec("select * from " . $type . " WHERE baby = 1 AND date = '" . $date. "'");
+            while ($row = $result->fetch_assoc()) {
                 $row["type"] = $type;
-            });
-            $results = array_merge($results, $result);
+                array_push($rows, $row);
+            }
         }
-        return json_encode($results);
+        return json_encode($rows);
     }
 ?>
