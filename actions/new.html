@@ -41,7 +41,7 @@
             });
 
             $("#submit").on("click", function(){
-                $.post("./dba.php", {
+                $.post("./action.php", {
                     type: action,
                     data: gatherData(action)
                 }, function(respond){

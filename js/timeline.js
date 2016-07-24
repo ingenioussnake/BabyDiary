@@ -149,7 +149,7 @@ $(function(){
         var item = gatherData(operatingItem.type);
         item.id = operatingItem.id;
         item.type = operatingItem.type;
-        $.post("../actions/dba.php", {type: "update", data: item}, function(respond){
+        $.post("../actions/action.php", {type: "update", data: item}, function(respond){
             console.log(respond);
             if (!!respond) {
                 $("#edit_dialog").hide();
@@ -165,7 +165,7 @@ $(function(){
 
     $("#delete_dialog").on("click", ".weui_btn_dialog.primary", function(){
         var item = operatingItem;
-        $.post("../actions/dba.php", {type: "remove", data: item}, function(respond){
+        $.post("../actions/action.php", {type: "remove", data: item}, function(respond){
             console.log(respond);
             if (!!respond) {
                 $("#delete_dialog").hide();

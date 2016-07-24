@@ -3,7 +3,10 @@
         echo "wrong get";
         exit;
     }
+    include '../db/dba.php';
     $type = $_GET["type"];
+    $dba = new DBA();
+    $dba->connect();
     switch ($type) {
         case 'date':
             echo getDates();
@@ -13,36 +16,25 @@
             echo getList($_GET["date"]);
             break;
     }
+    $dba->disconnect();
 
     function getDates () {
-        $mysqli = new mysqli("localhost", "baby", "leed", "baby_diary");
-        if ($mysqli->connect_errno) {
-            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-        }
-        $result = $mysqli->query("select date from dining UNION select date from sleep UNION select date from shit ORDER BY date DESC");
-        $rows = array();
-        while ($row = $result->fetch_assoc()) {
-            array_push($rows, $row["date"]);
-        }
-        $mysqli->close();
-        return json_encode($rows);
+        global $dba;
+        $result = $dba->query("select date from dining UNION select date from sleep UNION select date from shit ORDER BY date DESC", function ($row) { return $row["date"];});
+        return json_encode($result);
     }
 
     function getList ($date) {
-        $mysqli = new mysqli("localhost", "baby", "leed", "baby_diary");
-        if ($mysqli->connect_errno) {
-            echo "Failed to connect to MySQL: (" . $mysqli->connect_errno . ") " . $mysqli->connect_error;
-        }
         $types = array("dining", "sleep", "shit");
-        $rows = array();
+        $results = array();
+        global $dba;
         foreach ($types as $type) {
-            $result = $mysqli->query("select * from " . $type . " WHERE baby = 1 AND date = '" . $date. "'");
-            while ($row = $result->fetch_assoc()) {
+            $result = $dba->query("select * from " . $type . " WHERE baby = 1 AND date = '" . $date. "'", function($row){
+                global $type;
                 $row["type"] = $type;
-                array_push($rows, $row);
-            }
+            });
+            $results = array_merge($results, $result);
         }
-        $mysqli->close();
-        return json_encode($rows);
+        return json_encode($results);
     }
 ?>
