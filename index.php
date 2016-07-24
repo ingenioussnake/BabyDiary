@@ -30,7 +30,7 @@
             background-image: url("./images/icons/icon_mimo.png");
         }
         .icon_timeline {
-            background-image: url("./images/icons/icon_dining.png");
+            background-image: url("./images/icons/icon_timeline.png");
         }
     </style>
 </head>
