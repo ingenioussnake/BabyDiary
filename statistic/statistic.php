@@ -25,7 +25,7 @@
     }
 
     function getList ($date) {
-        $types = array("dining", "sleep", "shit");
+        $types = array("dining", "sleep", "shit", "height", "weight");
         $results = array();
         global $dba;
         foreach ($types as $type) {

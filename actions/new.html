@@ -26,16 +26,19 @@
             var TITLE = {
                 dining: "宝宝吃饭咯",
                 sleep: "宝宝睡觉咯",
-                shit: "宝宝拉臭咯"
+                shit: "宝宝拉臭咯",
+                height: "宝宝长高咯",
+                weight: "宝宝长肉咯",
+                mimo: "宝宝爱你咯"
             }
             var action = getUrlParam("type") || "dining";
             $(".bd").load("./" + action + "_fragment.html", function(respond){
                 if (!respond) return;
                 var curr = new Date();
                 $("#date").val(getDate(curr));
-                if (action === "shit") {
+                if (action === "shit" || action === "height" || action === "weight") {
                     $("#time").val(getTime(curr));
-                } else {
+                } else if (action === "dining" || action === "sleep") {
                     $("#start").val(getTime(curr));
                 }
             });

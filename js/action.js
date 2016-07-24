@@ -1,13 +1,18 @@
 function gatherData (action) {
     var data = { date: $("#date").val() };
-    if (action === "shit") {
-        data.time = $("#time").val() + ":00";
-    } else {
+    if (action === "dining" || action === "sleep") {
         addEndTime();
-        data.start = $("#start").val() + ":00";
-        data.end = $("#end").val() + ":00";
+        data.start = $("#start").val();
+        data.end = $("#end").val();
         if (action === "dining") {
             data.mm = $("#mother").prop("checked") ? 1 : 0
+        }
+    } else {
+        data.time = $("#time").val();
+        if (action === "height") {
+            data.height = $("#height").val();
+        } else if (action === "weight") {
+            data.weight = $("#weight").val();
         }
     }
     return data;

@@ -82,6 +82,10 @@ $(function(){
                 updateSleepItem($item, item);
             } else if (action === "shit") {
                 updateShitItem($item, item);
+            } else if (action === "height") {
+                updateHeightItem($item, item);
+            } else if (action === "weight") {
+                updateWeightItem($item, item);
             }
             $item.attr("idx", i);
             $list.prepend($item);
@@ -115,6 +119,24 @@ $(function(){
             $thumb.addClass("type_shit");
         }
         $(".content-inner h3", $item).html("好臭");
+        $(".thumb span", $item).html(row.time);
+    }
+
+    function updateHeightItem ($item, row) {
+        var $thumb = $(".thumb", $item);
+        if (!$thumb.hasClass("type_height")) {
+            $thumb.addClass("type_height");
+        }
+        $(".content-inner h3", $item).html("身高：" + row.height + "cm");
+        $(".thumb span", $item).html(row.time);
+    }
+
+    function updateWeightItem ($item, row) {
+        var $thumb = $(".thumb", $item);
+        if (!$thumb.hasClass("type_weight")) {
+            $thumb.addClass("type_weight");
+        }
+        $(".content-inner h3", $item).html("体重：" + row.weight + "kg");
         $(".thumb span", $item).html(row.time);
     }
 
@@ -179,9 +201,7 @@ $(function(){
         var action = item.type,
             $container = $("#edit_dialog .weui_dialog_bd");
         $container.find("#date").val(item.date);
-        if (action === "shit") {
-            $container.find("#time").val(item.time);
-        } else {
+        if (action === "dining" || action === "sleep") {
             $container.find("#start").val(item.start);
             $container.find("#end").val(item.end);
             if (action === "dining") {
@@ -191,7 +211,14 @@ $(function(){
                     $container.find("#formula").prop("checked", true);
                 }
             }
-        }
+        } else {
+            $container.find("#time").val(item.time);
+            if (action === "height") {
+                $container.find("#height").val(item.height);
+            } else if (action === "weight") {
+                $container.find("#weight").val(item.weight);
+            }
+        } 
     }
 
     function applyData (item) {
@@ -207,6 +234,10 @@ $(function(){
             updateSleepItem($item, item);
         } else if (action === "shit") {
             updateShitItem($item, item);
+        } else if (action === "height") {
+            updateHeightItem($item, item);
+        } else if (action === "weight") {
+            updateWeightItem($item, item);
         }
     }
 });

@@ -76,15 +76,13 @@
                         </div>
                         <p class="weui_grid_label">拉臭</p>
                     </a>
-                    <!-- <a class="weui_grid" href="./actions/new.html?type=height"> -->
-                    <a class="weui_grid" href="javascript:;">
+                    <a class="weui_grid" href="./actions/new.html?type=height">
                         <div class="weui_grid_icon">
                             <i class="icon icon_height"></i>
                         </div>
                         <p class="weui_grid_label">身高</p>
                     </a>
-                    <!-- <a class="weui_grid" href="./actions/new.html?type=weight"> -->
-                    <a class="weui_grid" href="javascript:;">
+                    <a class="weui_grid" href="./actions/new.html?type=weight">
                         <div class="weui_grid_icon">
                             <i class="icon icon_weight"></i>
                         </div>

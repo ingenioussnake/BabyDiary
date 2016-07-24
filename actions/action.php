@@ -21,6 +21,14 @@
             echo insertShit($data);
             break;
 
+        case 'height':
+            echo insertHeight($data);
+            break;
+
+        case 'weight':
+            echo insertWeight($data);
+            break;
+
         case 'update':
             echo updateAction($data);
             break;
@@ -48,6 +56,16 @@
     function insertShit ($data) {
         global $dba;
         return $dba->exec("INSERT INTO shit (id, baby, date, time) VALUES (NULL, 1, '". $data["date"] . "', '" . $data["time"]. "')");
+    }
+
+    function insertHeight ($data) {
+        global $dba;
+        return $dba->exec("INSERT INTO height (id, baby, date, time, height) VALUES (NULL, 1, '". $data["date"] . "', '" . $data["time"] . "', '" . $data["height"]. "')");
+    }
+
+    function insertWeight ($data) {
+        global $dba;
+        return $dba->exec("INSERT INTO weight (id, baby, date, time, weight) VALUES (NULL, 1, '". $data["date"] . "', '" . $data["time"] . "', '" . $data["weight"]. "')");
     }
 
     function updateAction ($data) {
