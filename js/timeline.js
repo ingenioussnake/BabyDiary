@@ -73,9 +73,9 @@ $(function(){
             action = item.type;
             $item = $(LIST_ITEM_TMPL);
             item.baby = parseInt(item.baby);
-            item.mm = parseInt(item.mm);
             if (action === "dining") {
                 $(".content-inner", $item).append($(EXTRA_LIST_ITEM_TMPL));
+                item.mm = parseInt(item.mm);
                 updateDiningItem($item, item);
             } else if (action === "sleep") {
                 $(".content-inner", $item).append($(EXTRA_LIST_ITEM_TMPL));
@@ -158,7 +158,7 @@ $(function(){
         var action = item.type;
         $("#edit_dialog .weui_dialog_bd").load("../actions/" + action + "_fragment.html", function(respond){
             if (!respond) return;
-            loadData(item);
+            applyData(item);
             $("#edit_dialog").show();
         });
     }
@@ -168,14 +168,14 @@ $(function(){
     });
 
     $("#edit_dialog").on("click", ".weui_btn_dialog.primary", function(){
-        var item = gatherData(operatingItem.type);
+        var item = loadData();
         item.id = operatingItem.id;
         item.type = operatingItem.type;
         $.post("../actions/action.php", {type: "update", data: item}, function(respond){
             console.log(respond);
             if (!!respond) {
                 $("#edit_dialog").hide();
-                applyData(item);
+                updateData(item);
                 showToast();
             }
         });
@@ -197,31 +197,7 @@ $(function(){
         });
     });
 
-    function loadData (item) {
-        var action = item.type,
-            $container = $("#edit_dialog .weui_dialog_bd");
-        $container.find("#date").val(item.date);
-        if (action === "dining" || action === "sleep") {
-            $container.find("#start").val(item.start);
-            $container.find("#end").val(item.end);
-            if (action === "dining") {
-                if (item.mm) {
-                    $container.find("#mother").prop("checked", true);
-                } else {
-                    $container.find("#formula").prop("checked", true);
-                }
-            }
-        } else {
-            $container.find("#time").val(item.time);
-            if (action === "height") {
-                $container.find("#height").val(item.height);
-            } else if (action === "weight") {
-                $container.find("#weight").val(item.weight);
-            }
-        } 
-    }
-
-    function applyData (item) {
+    function updateData (item) {
         var $item = $("li.event[idx="+ list.indexOf(operatingItem) +"]"),
             action = item.type;
         if (item.date !== operatingItem.date) {

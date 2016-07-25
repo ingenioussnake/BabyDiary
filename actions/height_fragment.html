@@ -1,4 +1,4 @@
-<div class="weui_cells weui_cells_form">
+<div class="weui_cells weui_cells_form action_form">
     <div class="weui_cell">
         <div class="weui_cell_hd"><label class="weui_label" for="">日期</label></div>
         <div class="weui_cell_bd weui_cell_primary">
@@ -14,8 +14,31 @@
     <div class="weui_cell">
         <div class="weui_cell_hd"><label class="weui_label" for="">身高</label></div>
         <div class="weui_cell_bd weui_cell_primary">
-            <input id="height" class="weui_input" type="number" placeholder="" value="" style="width: 5rem;">
+            <input id="height" class="weui_input" type="number" placeholder="" value="" style="width: 4rem;">
             <span>cm</span>
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    var page_title = "宝宝长高咯",
+        $form = $(".action_form");
+
+    function applyData (data) {
+        if (!data) {
+            var curr = new Date();
+            $("#date", $form).val(getDate(curr));
+            $("#time", $form).val(getTime(curr));
+        } else {
+            $("#date", $form).val(data.date);
+            $("#time", $form).val(data.time);
+            $("#height", $form).val(data.height);
+        }
+    }
+    function loadData () {
+        return { 
+            date: $("#date", $form).val(),
+            time: $("#time", $form).val(),
+            height: $("#height", $form).val()
+        };
+    }
+</script>

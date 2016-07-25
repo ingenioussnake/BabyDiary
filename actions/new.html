@@ -18,78 +18,39 @@
             margin-top: auto;
             margin-bottom: auto;
         }
-        .weui_uploader_file {
-            position: relative;
-        }
-        .weui_uploader_file a.delete {
-            width: 32px;
-            height: 32px;
-            background-image: url("../images/icons/icon_delete.png");
-            background-size: contain;
-            position: absolute;
-            bottom: 0px;
-            right: 0px;
-        }
     </style>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
     <script src="../js/action.js"></script>
     <script type="text/javascript">
         $(function(){
-            var TITLE = {
-                dining: "宝宝吃饭咯",
-                sleep: "宝宝睡觉咯",
-                shit: "宝宝拉臭咯",
-                height: "宝宝长高咯",
-                weight: "宝宝长肉咯",
-                memo: "宝宝爱你咯"
-            }
             var action = getUrlParam("type") || "dining";
-            var fileList = [];
             $(".bd").load("./" + action + "_fragment.html", function(respond){
                 if (!respond) return;
-                var curr = new Date();
-                $("#date").val(getDate(curr));
-                if (action === "shit" || action === "height" || action === "weight" || action === "memo") {
-                    $("#time").val(getTime(curr));
-                } else if (action === "dining" || action === "sleep") {
-                    $("#start").val(getTime(curr));
-                }
-                if (action === "memo") {
-                    var $imgContainer = $(".weui_uploader_files"),
-                        oFileReader, $img;
-                    $("#pics").on("change", function(e){
-                        for (var i = 0; i < this.files.length; i++) {
-                            oFileReader = new FileReader();
-                            oFileReader.onload = function (e) {
-                                $img = $("<li><a class='delete' href='javascript:;'></a></li>");
-                                $img.addClass("weui_uploader_file");
-                                $img.css("background-image", "url("+e.target.result+")");
-                                $imgContainer.append($img);
-                            };
-                            oFileReader.readAsDataURL(this.files[i]);
-                            fileList.push(this.files[i]);
-                        }
-                    });
-                    $(".weui_uploader_files").on("click", "a.delete", function(e){
-                        $img = $(e.target).parent();
-                        var index = $img.index();
-                        fileList.splice(index, 1);
-                        $img.remove();
-                    })
-                }
+                $(".page_title").html(page_title);
+                applyData();
             });
 
             $("#submit").on("click", function(){
+                if (action === "memo") { //TODO: remove after it's ready
+                    return;
+                }
                 $.post("./action.php", {
                     type: action,
-                    data: gatherData(action)
+                    data: loadData()
                 }, function(respond){
                     console.log(respond);
                     !!respond && showToast();
                 });
+                /*$.ajax({
+                    url: "./action.php",
+                    type: "POST",
+                    data: loadData(),
+                    processData: false,  // 告诉jQuery不要去处理发送的数据
+                    contentType: false   // 告诉jQuery不要去设置Content-Type请求头
+                });*/
             });
 
-            $(".page_title").html(TITLE[action]);
+            
         });
     </script>
 </head>
