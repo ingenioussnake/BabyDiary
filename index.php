@@ -26,8 +26,8 @@
         .icon_weight {
             background-image: url("./images/icons/icon_weight.png");
         }
-        .icon_mimo {
-            background-image: url("./images/icons/icon_mimo.png");
+        .icon_memo {
+            background-image: url("./images/icons/icon_memo.png");
         }
         .icon_timeline {
             background-image: url("./images/icons/icon_timeline.png");
@@ -88,10 +88,9 @@
                         </div>
                         <p class="weui_grid_label">体重</p>
                     </a>
-                    <!-- <a class="weui_grid" href="./actions/new.html?type=mimo"> -->
-                    <a class="weui_grid" href="javascript:;">
+                    <a class="weui_grid" href="./actions/new.html?type=memo">
                         <div class="weui_grid_icon">
-                            <i class="icon icon_mimo"></i>
+                            <i class="icon icon_memo"></i>
                         </div>
                         <p class="weui_grid_label">心情</p>
                     </a>
