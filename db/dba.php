@@ -11,7 +11,7 @@
             if ($this->connection->connect_errno) {
                 echo "Failed to connect to MySQL: (" . $this->connection->connect_errno . ") " . $this->connection->connect_error;
             }
-            $this->exec("set name 'utf8'");
+            $this->exec("set names 'utf8'");
             $this->exec("set character set 'utf8'");
             return $this->connection;
         }
