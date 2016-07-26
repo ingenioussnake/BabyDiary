@@ -26,7 +26,7 @@
             $pictures = $_FILES["picture"];
             insertPictures($id, $pictures);
         }
-        return $id;
+        return 1;
     }
 
     function insertMemo () {
