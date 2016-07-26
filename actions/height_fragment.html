@@ -21,7 +21,10 @@
 </div>
 <script type="text/javascript">
     var page_title = "宝宝长高咯",
-        $form = $(".action_form");
+        $form = $(".action_form"),
+        ajaxSettings = {
+            url: "./action.php"
+        };
 
     function applyData (data) {
         if (!data) {

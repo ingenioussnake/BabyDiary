@@ -9,26 +9,6 @@
     $dba = new DBA();
     $dba->connect();
     switch ($type) {
-        case 'dining':
-            echo insertDining($data);
-            break;
-        
-        case 'sleep':
-            echo insertSleep($data);
-            break;
-
-        case 'shit':
-            echo insertShit($data);
-            break;
-
-        case 'height':
-            echo insertHeight($data);
-            break;
-
-        case 'weight':
-            echo insertWeight($data);
-            break;
-
         case 'update':
             echo updateAction($data);
             break;
@@ -38,34 +18,21 @@
             break;
 
         default:
-            # code...
+            echo insert($type, $data);
             break;
     }
     $dba->disconnect();
 
-    function insertDining ($data) {
+    function insert ($type, $data) {
         global $dba;
-        return $dba->exec("INSERT INTO dining (id, baby, date, start, end, mm) VALUES (NULL, 1, '". $data["date"] . "', '" . $data["start"] . "', '". $data["end"] . "', " . $data["mm"]. ")");
-    }
-
-    function insertSleep ($data) {
-        global $dba;
-        return $dba->exec("INSERT INTO sleep (id, baby, date, start, end) VALUES (NULL, 1, '". $data["date"] . "', '" . $data["start"] . "', '". $data["end"] . "')");
-    }
-
-    function insertShit ($data) {
-        global $dba;
-        return $dba->exec("INSERT INTO shit (id, baby, date, time) VALUES (NULL, 1, '". $data["date"] . "', '" . $data["time"]. "')");
-    }
-
-    function insertHeight ($data) {
-        global $dba;
-        return $dba->exec("INSERT INTO height (id, baby, date, time, height) VALUES (NULL, 1, '". $data["date"] . "', '" . $data["time"] . "', '" . $data["height"]. "')");
-    }
-
-    function insertWeight ($data) {
-        global $dba;
-        return $dba->exec("INSERT INTO weight (id, baby, date, time, weight) VALUES (NULL, 1, '". $data["date"] . "', '" . $data["time"] . "', '" . $data["weight"]. "')");
+        $columns = "id, baby";
+        $values = "NULL, 1";
+        foreach ($data as $key => $value) {
+            $columns .= ", " . $key;
+            $values .= ", '" . $value . "'";
+        }
+        $stmt = "INSERT INTO " . $type . "(" . $columns . ") VALUES (" . $values . ")";
+        return $dba->exec($stmt);
     }
 
     function updateAction ($data) {

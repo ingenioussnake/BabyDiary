@@ -67,8 +67,14 @@
 </style>
 <script type="text/javascript">
     var page_title = "宝宝爱你咯",
-        file_list = [],
         $form = $(".action_form"),
+        ajaxSettings = {
+            url: "./memo.php",
+            contentType: false, // 告诉jQuery不要去处理发送的数据
+            processData: false  // 告诉jQuery不要去设置Content-Type请求头
+        };
+
+    var file_list = [],
         $preview = $(".weui_uploader_files"),
         oFileReader, $img;
     $("#pics").on("change", function(e){

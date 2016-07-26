@@ -97,9 +97,9 @@ $(function(){
         var $thumb = $(".thumb", $item);
         $thumb.removeClass("type_mm type_fm");
         $thumb.addClass(row.mm ? "type_mm" : "type_fm");
-        $(".thumb span", $item).html(row.start);
-        $(".from", $item).html(row.start);
-        $(".to", $item).html(row.end);
+        $(".thumb span", $item).html(removeNumberTail(row.start));
+        $(".from", $item).html(removeNumberTail(row.start));
+        $(".to", $item).html(removeNumberTail(row.end));
     }
 
     function updateSleepItem ($item, row) {
@@ -108,9 +108,9 @@ $(function(){
         if (!$thumb.hasClass("type_sleep")) {
             $thumb.addClass("type_sleep");
         }
-        $(".thumb span", $item).html(row.start);
-        $(".from", $item).html(row.start);
-        $(".to", $item).html(row.end);
+        $(".thumb span", $item).html(removeNumberTail(row.start));
+        $(".from", $item).html(removeNumberTail(row.start));
+        $(".to", $item).html(removeNumberTail(row.end));
     }
 
     function updateShitItem ($item, row) {
@@ -119,7 +119,7 @@ $(function(){
             $thumb.addClass("type_shit");
         }
         $(".content-inner h3", $item).html("好臭");
-        $(".thumb span", $item).html(row.time);
+        $(".thumb span", $item).html(removeNumberTail(row.time));
     }
 
     function updateHeightItem ($item, row) {
@@ -128,7 +128,7 @@ $(function(){
             $thumb.addClass("type_height");
         }
         $(".content-inner h3", $item).html("身高：" + row.height + "cm");
-        $(".thumb span", $item).html(row.time);
+        $(".thumb span", $item).html(removeNumberTail(row.time));
     }
 
     function updateWeightItem ($item, row) {
@@ -137,7 +137,7 @@ $(function(){
             $thumb.addClass("type_weight");
         }
         $(".content-inner h3", $item).html("体重：" + row.weight + "kg");
-        $(".thumb span", $item).html(row.time);
+        $(".thumb span", $item).html(removeNumberTail(row.time));
     }
 
     function getItemIndex ($inner) {

@@ -31,26 +31,16 @@
             });
 
             $("#submit").on("click", function(){
-                if (action === "memo") { //TODO: remove after it's ready
-                    return;
-                }
-                $.post("./action.php", {
-                    type: action,
-                    data: loadData()
-                }, function(respond){
-                    console.log(respond);
-                    !!respond && showToast();
-                });
-                /*$.ajax({
-                    url: "./action.php",
+                var data = loadData();
+                $.ajax($.extend({
                     type: "POST",
-                    data: loadData(),
-                    processData: false,  // 告诉jQuery不要去处理发送的数据
-                    contentType: false   // 告诉jQuery不要去设置Content-Type请求头
-                });*/
+                    data: data instanceof FormData ? data : { type: action, data: data},
+                    success: function (respond) {
+                        console.log(respond);
+                        respond == 1 && showToast();
+                    }
+                }, ajaxSettings));
             });
-
-            
         });
     </script>
 </head>
