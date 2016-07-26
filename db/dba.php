@@ -42,5 +42,9 @@
             }
             return $rows;
         }
+
+        public function insert_id () {
+            return $this->connection->insert_id;
+        }
     }
 ?>
