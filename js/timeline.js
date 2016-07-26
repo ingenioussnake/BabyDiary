@@ -18,9 +18,15 @@ $(function(){
 
     var EXTRA_LIST_ITEM_TMPL = "<div><p><span>开始<span class='from'></span></span></p>" +
                                 "<p><span>结束<span class='to'></span></span></p></div>";
+    var MEMO_LIST_ITEM_TMPL = "<div><p><span class='memo'></span></p>"+
+                                "<div class='weui_uploader_bd'>"+
+                                    "<ul class='weui_uploader_files'></ul>"+
+                                "</div>"+
+                              "</div>";
+
     var list, operatingItem;
 
-    $.get("./statistic.php", {type: "date"}, function(data){
+    $.get("./timeline.php", {type: "date"}, function(data){
         console.log(data);
         if (data.length > 0) {
             addDate(data);
@@ -51,7 +57,7 @@ $(function(){
 
     function getList () {
         var date = $("#date_slt").val();
-        $.get("./statistic.php", {type: "list", date: date}, function(data){
+        $.get("./timeline.php", {type: "list", date: date}, function(data){
             $(".timeline").empty();
             if (data.length > 0) {
                 list = data;
@@ -86,6 +92,10 @@ $(function(){
                 updateHeightItem($item, item);
             } else if (action === "weight") {
                 updateWeightItem($item, item);
+            } else if (action === "memo") {
+                $(".content-inner", $item).append($(MEMO_LIST_ITEM_TMPL));
+                updateMemoItem($item, item);
+                // loadMemoPictures(item.id);
             }
             $item.attr("idx", i);
             $list.prepend($item);
@@ -138,6 +148,22 @@ $(function(){
         }
         $(".content-inner h3", $item).html("体重：" + row.weight + "kg");
         $(".thumb span", $item).html(removeNumberTail(row.time));
+    }
+
+    function updateMemoItem ($item, row) {
+        var $thumb = $(".thumb", $item);
+        if (!$thumb.hasClass("type_memo")) {
+            $thumb.addClass("type_memo");
+        }
+        $(".content-inner h3", $item).html(row.title);
+        $(".content-inner .memo", $item).html(row.memo);
+        $(".thumb span", $item).html(removeNumberTail(row.time));
+    }
+
+    function loadMemoPictures (id) {
+        $.get("./timeline.php", {type: "picture", id: id}, function(data){
+            console.log(data);
+        });
     }
 
     function getItemIndex ($inner) {
