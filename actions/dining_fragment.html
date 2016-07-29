@@ -64,10 +64,6 @@
     </div>
 </div>
 <style type="text/css">
-    .appetite_cell {
-        display: none;
-    }
-
     .appetite_cell input{
         width: 3rem;
     }
@@ -81,7 +77,7 @@
 
     $("input:radio").on("change", function(){
         if ($("input[name=food]:radio:checked").val() !== "mm") {
-            $(".appetite_cell").css("display", "flex");
+            $(".appetite_cell").removeAttr("style");
         } else {
             $(".appetite_cell").css("display", "none");
             $(".appetite_cell input").val(0);
@@ -98,8 +94,8 @@
             $("#start", $form).val(data.start);
             $("#end", $form).val(data.end);
             $("input[value=" + data.food + "]:radio").prop("checked", true);
-            if (data.food !== "mm") {
-                $(".appetite_cell").css("display", "flex");
+            if (data.food === "mm") {
+                $(".appetite_cell").css("display", "none");
             }
             $("#appetite").val(data.appetite);
             $("#comment").val(data.comment);
