@@ -16,7 +16,10 @@ $(function(){
                     "</div>"+
                 "</li>"
 
-    var EXTRA_LIST_ITEM_TMPL = "<div><p><span>开始<span class='from'></span></span></p>" +
+    var DINING_LIST_ITEM_TMPL = "<div><p><h4></h4></p><p><span>开始<span class='from'></span></span></p>" +
+                                "<p><span>结束<span class='to'></span></span></p><p><span class='appetite'></span></p>"+
+                                "<p><span class='comment'></span></p></div>";
+    var SLEEP_LIST_ITEM_TMPL = "<div><p><span>开始<span class='from'></span></span></p>" +
                                 "<p><span>结束<span class='to'></span></span></p></div>";
     var MEMO_LIST_ITEM_TMPL = "<div><p><span class='memo'></span></p>"+
                                 "<div class='weui_uploader_bd'>"+
@@ -24,6 +27,7 @@ $(function(){
                                 "</div>"+
                               "</div>";
 
+    var DINING_TYPE = {mm: "母乳", fm: "配方", mx: "混合"};
     var list, operatingItem;
 
     $.get("./timeline.php", {type: "date"}, function(data){
@@ -80,11 +84,10 @@ $(function(){
             $item = $(LIST_ITEM_TMPL);
             item.baby = parseInt(item.baby);
             if (action === "dining") {
-                $(".content-inner", $item).append($(EXTRA_LIST_ITEM_TMPL));
-                item.mm = parseInt(item.mm);
+                $(".content-inner", $item).append($(DINING_LIST_ITEM_TMPL));
                 updateDiningItem($item, item);
             } else if (action === "sleep") {
-                $(".content-inner", $item).append($(EXTRA_LIST_ITEM_TMPL));
+                $(".content-inner", $item).append($(SLEEP_LIST_ITEM_TMPL));
                 updateSleepItem($item, item);
             } else if (action === "shit") {
                 updateShitItem($item, item);
@@ -103,11 +106,18 @@ $(function(){
     }
 
     function updateDiningItem ($item, row) {
-        $(".content-inner h3", $item).html(row.mm ? "母乳" : "配方");
+        $(".content-inner h3", $item).html("吃饭");
         var $thumb = $(".thumb", $item);
-        $thumb.removeClass("type_mm type_fm");
-        $thumb.addClass(row.mm ? "type_mm" : "type_fm");
+        $thumb.removeClass();
+        $thumb.addClass("thumb type_" + row.food);
         $(".thumb span", $item).html(removeNumberTail(row.start));
+        $("h4", $item).html(DINING_TYPE[row.food]);
+        if (row.food !== "mm") {
+            $(".appetite", $item).html(row.appetite + "勺");
+        } else {
+            $(".appetite", $item).css("display", "none");
+        }
+        $(".comment", $item).html(row.comment);
         $(".from", $item).html(removeNumberTail(row.start));
         $(".to", $item).html(removeNumberTail(row.end));
     }
@@ -197,7 +207,8 @@ $(function(){
         var item = loadData();
         item.id = operatingItem.id;
         item.type = operatingItem.type;
-        $.post("../actions/action.php", {type: "update", data: item}, function(respond){
+        var url = (item.type === "dining") ? "../actions/dining.php" : "../actions/action.php"; //TODO: ugly
+        $.post(url, {type: "update", data: item}, function(respond){
             console.log(respond);
             if (!!respond) {
                 $("#edit_dialog").hide();

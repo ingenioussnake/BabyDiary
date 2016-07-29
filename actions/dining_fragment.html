@@ -18,33 +18,75 @@
         </div>
     </div>
     <div class="weui_cells weui_cells_radio">
-        <label class="weui_cell weui_check_label" for="mother">
+        <label class="weui_cell weui_check_label" for="mm">
             <div class="weui_cell_bd weui_cell_primary">
                 <p>母乳</p>
             </div>
             <div class="weui_cell_ft">
-                <input name="food" class="weui_check" id="mother" type="radio" value="mm" checked="checked">
+                <input name="food" class="weui_check" id="mm" type="radio" value="mm" checked="checked">
                 <span class="weui_icon_checked"></span>
             </div>
         </label>
-        <label class="weui_cell weui_check_label" for="formula">
+        <label class="weui_cell weui_check_label" for="fm">
 
             <div class="weui_cell_bd weui_cell_primary">
                 <p>配方</p>
             </div>
             <div class="weui_cell_ft">
-                <input name="food" class="weui_check" id="formula" type="radio" value="fm">
+                <input name="food" class="weui_check" id="fm" type="radio" value="fm">
+                <span class="weui_icon_checked"></span>
+            </div>
+        </label>
+        <label class="weui_cell weui_check_label" for="mx">
+
+            <div class="weui_cell_bd weui_cell_primary">
+                <p>混合</p>
+            </div>
+            <div class="weui_cell_ft">
+                <input name="food" class="weui_check" id="mx" type="radio" value="mx">
                 <span class="weui_icon_checked"></span>
             </div>
         </label>
     </div>
+    <div class="weui_cell appetite_cell">
+        <div class="weui_cell_hd"><label class="weui_label">饭量</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <input class="weui_input" type="number" id="appetite">
+            <span>勺</span>
+        </div>
+    </div>
+    <div class="weui_cell">
+        <div class="weui_cell_hd"><label class="weui_label" for="">备注</label></div>
+        <div class="weui_cell_bd weui_cell_primary">
+            <textarea class="weui_textarea" id="comment"></textarea>
+            <!-- <div class="weui_textarea_counter"><span>0</span>/200</div> -->
+        </div>
+    </div>
 </div>
+<style type="text/css">
+    .appetite_cell {
+        display: none;
+    }
+
+    .appetite_cell input{
+        width: 3rem;
+    }
+</style>
 <script type="text/javascript">
     var page_title = "宝宝吃饭咯",
         $form = $(".action_form"),
         ajaxSettings = {
-            url: "./action.php"
+            url: "./dining.php"
         };
+
+    $("input:radio").on("change", function(){
+        if ($("input[name=food]:radio:checked").val() !== "mm") {
+            $(".appetite_cell").css("display", "flex");
+        } else {
+            $(".appetite_cell").css("display", "none");
+            $(".appetite_cell input").val(0);
+        }
+    });
 
     function applyData (data) {
         if (!data) {
@@ -55,11 +97,12 @@
             $("#date", $form).val(data.date);
             $("#start", $form).val(data.start);
             $("#end", $form).val(data.end);
-            if (data.mm) {
-                $("#mother", $form).prop("checked", true);
-            } else {
-                $("#formula", $form).prop("checked", true);
+            $("input[value=" + data.food + "]:radio").prop("checked", true);
+            if (data.food !== "mm") {
+                $(".appetite_cell").css("display", "flex");
             }
+            $("#appetite").val(data.appetite);
+            $("#comment").val(data.comment);
         }
     }
     function loadData () {
@@ -69,7 +112,9 @@
             date: $("#date", $form).val(),
             start: $("#start", $form).val(),
             end: $("#end", $form).val(),
-            mm: $("#mother", $form).prop("checked") ? 1 : 0
+            food: $("input[name=food]:radio:checked").val(),
+            appetite: $("#appetite").val() || 0,
+            comment: $("#comment").val()
         };
     }
 </script>

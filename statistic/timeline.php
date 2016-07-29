@@ -29,7 +29,7 @@
     }
 
     function getList ($date) {
-        $types = array("dining", "sleep", "shit", "height", "weight", "memo");
+        $types = array("sleep", "shit", "height", "weight", "memo");
         $results = array();
         global $dba;
         foreach ($types as $type) {
@@ -39,7 +39,7 @@
             });
             $results = array_merge($results, $result);
         }
-        header("charset=utf-8");
+        $results = array_merge($results, getDiningList($date));
         return json_encode($results);
     }
 
@@ -53,5 +53,13 @@
             header("Content-Type:image/*");
             return $result[0];
         }
+    }
+
+    function getDiningList ($date) {
+        global $dba;
+        return $dba->query("select dining.id, dining.date, dining.start, dining.end, dining.appetite, dining.comment, food.name as food from dining inner join food on dining.food = food.id WHERE dining.baby = 1 AND dining.date = '" . $date. "';", function($row) {
+            $row["type"] = "dining";
+            return $row;
+        });
     }
 ?>
