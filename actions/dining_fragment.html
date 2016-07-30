@@ -48,7 +48,7 @@
             </div>
         </label>
     </div>
-    <div class="weui_cell appetite_cell">
+    <div class="weui_cell appetite_cell" style="display: none;">
         <div class="weui_cell_hd"><label class="weui_label">饭量</label></div>
         <div class="weui_cell_bd weui_cell_primary">
             <input class="weui_input" type="number" id="appetite">
@@ -94,8 +94,8 @@
             $("#start", $form).val(data.start);
             $("#end", $form).val(data.end);
             $("input[value=" + data.food + "]:radio").prop("checked", true);
-            if (data.food === "mm") {
-                $(".appetite_cell").css("display", "none");
+            if (data.food !== "mm") {
+                $(".appetite_cell").removeAttr("style");
             }
             $("#appetite").val(data.appetite);
             $("#comment").val(data.comment);

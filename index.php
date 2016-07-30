@@ -94,7 +94,7 @@
                         </div>
                         <p class="weui_grid_label">心情</p>
                     </a>
-                    <a class="weui_grid" href="./statistic/timeline.html" style="width: 100%;">
+                    <a class="weui_grid" href="./timeline/timeline.html" style="width: 100%;">
                         <div class="weui_grid_icon">
                             <i class="icon icon_timeline"></i>
                         </div>

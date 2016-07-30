@@ -24,7 +24,7 @@
             <!-- <div class="weui_textarea_counter"><span>0</span>/200</div> -->
         </div>
     </div>
-    <div class="weui_cell">
+    <div class="weui_cell picture_cell">
         <div class="weui_cell_bd weui_cell_primary">
             <div class="weui_uploader">
                 <div class="weui_uploader_hd weui_cell">
@@ -101,6 +101,12 @@
             var curr = new Date();
             $("#date", $form).val(getDate(curr));
             $("#time", $form).val(getTime(curr));
+        } else {
+            $("#date", $form).val(data.date);
+            $("#time", $form).val(data.time);
+            $("#title").val(data.title);
+            $("#memo").val(data.memo);
+            $(".picture_cell").hide();
         }
     }
     function loadData () {

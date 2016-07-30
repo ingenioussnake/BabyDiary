@@ -20,7 +20,7 @@
         }
     </style>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
-    <script src="../js/action.js"></script>
+    <script src="../js/util.js"></script>
     <script type="text/javascript">
         $(function(){
             var action = getUrlParam("type") || "dining";
@@ -37,7 +37,7 @@
                     data: data instanceof FormData ? data : { type: action, data: data},
                     success: function (respond) {
                         console.log(respond);
-                        respond == 1 && showToast();
+                        respond == 1 && showToast($("#toast"));
                     }
                 }, ajaxSettings));
             });
