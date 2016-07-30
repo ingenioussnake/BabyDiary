@@ -66,6 +66,9 @@ $(function(){
             if (data.length > 0) {
                 list = data;
                 data.sort(function(a, b){
+                    a.date = a.date.replace(/-/g, "/");
+                    b.date = b.date.replace(/-/g, "/");
+                    // for ios
                     return new Date(a.date + " " + (a.start || a.time)) - new Date(b.date + " " + (b.start || b.time));
                 });
                 console.log(data);

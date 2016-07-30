@@ -57,7 +57,7 @@
 
     function getDiningList ($date) {
         global $dba;
-        return $dba->query("select dining.id, dining.date, dining.start, dining.end, dining.appetite, dining.comment, food.name as food from dining inner join food on dining.food = food.id WHERE dining.baby = 1 AND dining.date = '" . $date. "';", function($row) {
+        return $dba->query("select dining.id, dining.date, dining.start, dining.end, dining.appetite, dining.comment, food.name as food from dining inner join food on dining.food = food.id WHERE dining.baby = 1 AND dining.date = '" . $date. "' order by dining.start desc;", function($row) {
             $row["type"] = "dining";
             return $row;
         });
