@@ -32,6 +32,12 @@
         .icon_timeline {
             background-image: url("./images/icons/icon_timeline.png");
         }
+        .icon_statistic {
+            background-image: url("./images/icons/icon_statistic.png");
+        }
+        .icon_profile {
+            background-image: url("./images/icons/icon_profile.png");
+        }
     </style>
 </head>
 <?php
@@ -94,11 +100,25 @@
                         </div>
                         <p class="weui_grid_label">心情</p>
                     </a>
-                    <a class="weui_grid" href="./timeline/timeline.html" style="width: 100%;">
+                    <a class="weui_grid" href="./timeline/timeline.html">
                         <div class="weui_grid_icon">
                             <i class="icon icon_timeline"></i>
                         </div>
-                        <p class="weui_grid_label">时间线</p>
+                        <p class="weui_grid_label">一天</p>
+                    </a>
+                    <!-- <a class="weui_grid" href="./statistic/statistic.html"> -->
+                    <a class="weui_grid" href="javascript:;">
+                        <div class="weui_grid_icon">
+                            <i class="icon icon_statistic"></i>
+                        </div>
+                        <p class="weui_grid_label">统计</p>
+                    </a>
+                    <!-- <a class="weui_grid" href="./profile/profile.html"> -->
+                    <a class="weui_grid" href="javascript:;">
+                        <div class="weui_grid_icon">
+                            <i class="icon icon_profile"></i>
+                        </div>
+                        <p class="weui_grid_label">档案</p>
                     </a>
                 </div>
             </div>
