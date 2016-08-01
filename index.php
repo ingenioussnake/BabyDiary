@@ -113,8 +113,7 @@
                         </div>
                         <p class="weui_grid_label">统计</p>
                     </a>
-                    <!-- <a class="weui_grid" href="./profile/profile.html"> -->
-                    <a class="weui_grid" href="javascript:;">
+                    <a class="weui_grid" href="./profile/profile.html">
                         <div class="weui_grid_icon">
                             <i class="icon icon_profile"></i>
                         </div>
