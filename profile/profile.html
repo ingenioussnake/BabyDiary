@@ -6,33 +6,17 @@
     <title>宝宝档案</title>
     <link rel="stylesheet" href="../style/weui.min.css"/>
     <link rel="stylesheet" href="../style/common.css"/>
-    <style type="text/css">
-        .footer:before {
-            border: 0;
-        }
-        .footer {
-            padding-top: 0;
-        }
-        .footer a.weui_btn {
-            width: 40%;
-            margin-top: auto;
-            margin-bottom: auto;
-        }
-    </style>
     <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
-    <script src="../js/util.js"></script>
     <script type="text/javascript">
         $(function(){
-            $.get("./profile.php", function(data){
-                console.log(data);
-                $("#baby_avatar img").attr("src", data.avatar);
-                $("#baby_name").html(data.name);
-                $("#baby_sex").html(data.sex);
-                $("#baby_blood_type").html(data.blood);
-                $("#baby_birthday").html(data.birthday);
-                $("#baby_weight").html(data.weight);
-                $("#baby_height").html(data.height);
-            });
+            $.get("./profile.php", {type: "info"}, function(data){
+                $(".baby_name").html(data.name);
+                $(".baby_sex").html(data.sex === "1" ? "男" : "女");
+                $(".baby_blood_type").html(data.blood);
+                $(".baby_birthday").html(data.birthday);
+                $(".baby_weight").html(data.weight);
+                $(".baby_height").html(data.height);
+            }, "json");
         });
     </script>
 </head>
@@ -51,7 +35,7 @@
                                 <h4 class="weui_media_title">头像</h4>
                             </div>
                             <div class="weui_media_hd baby_avatar">
-                                <img class="weui_media_appmsg_thumb" alt="">
+                                <img class="weui_media_appmsg_thumb" alt="" src="./profile.php?type=avatar">
                             </div>
                         </a>
                     </div>
@@ -61,25 +45,19 @@
                         <div class="weui_media_bd">
                             <h4 class="weui_media_title">姓名</h4>
                         </div>
-                        <div class="weui_media_text baby_name">
-                            王苇杭
-                        </div>
+                        <div class="weui_media_text baby_name"></div>
                     </a>
                     <a class="weui_media_box weui_media_appmsg" href="javascript:void(0);">
                         <div class="weui_media_bd">
                             <h4 class="weui_media_title">性别</h4>
                         </div>
-                        <div class="weui_media_text baby_sex">
-                            男
-                        </div>
+                        <div class="weui_media_text baby_sex"></div>
                     </a>
                     <a class="weui_media_box weui_media_appmsg" href="javascript:void(0);">
                         <div class="weui_media_bd">
                             <h4 class="weui_media_title">血型</h4>
                         </div>
-                        <div class="weui_media_text baby_blood_type">
-                            A
-                        </div>
+                        <div class="weui_media_text baby_blood_type"></div>
                     </a>
                 </div>
                 <div class="weui_panel">
@@ -89,16 +67,14 @@
                             <div class="weui_media_bd">
                                 <h4 class="weui_media_title">出生日期</h4>
                             </div>
-                            <div class="weui_media_text baby_birthday">
-                                2016-05-15
-                            </div>
+                            <div class="weui_media_text baby_birthday"></div>
                         </a>
                         <a class="weui_media_box weui_media_appmsg" href="javascript:void(0);">
                             <div class="weui_media_bd">
                                 <h4 class="weui_media_title">出生体重</h4>
                             </div>
                             <div class="weui_media_text">
-                                <span class="baby_weight">3.63</span>
+                                <span class="baby_weight"></span>
                                 <span>kg</span>
                             </div>
                         </a>
@@ -107,7 +83,7 @@
                                 <h4 class="weui_media_title">出生身长</h4>
                             </div>
                             <div class="weui_media_text">
-                                <span class="baby_height">50</span>
+                                <span class="baby_height"></span>
                                 <span>cm</span>
                             </div>
                         </a>

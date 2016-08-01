@@ -16,17 +16,27 @@ $(function(){
                     "</div>"+
                 "</li>";
 
-    var list = [], operatingItem;
+    var list = [], operatingItem, birthday;
 
     $.get("./timeline.php", {type: "date"}, function(data){
         console.log(data);
         if (data.length > 0) {
             addDate(data);
             getList();
+            $.get("../profile/profile.php", {type: "birthday"}, function(data){
+                console.log(data);
+                birthday = new Date(data);
+                showBirthday();
+            });
         }
     }, "json");
 
-    $("#date_slt").on("change", getList);
+    
+
+    $("#date_slt").on("change", function(){
+        getList();
+        showBirthday();
+    });
 
     $(".timeline").on("click", ".edit", function(e){
         editItem(getItemIndex($(e.target)));
@@ -35,6 +45,11 @@ $(function(){
     $(".timeline").on("click", ".delete", function(e){
         deleteItem(getItemIndex($(e.target)));
     });
+
+    function showBirthday () {
+        var date = new Date($("#date_slt").val());
+        $(".dayth span").html((date - birthday) / (1000 * 60 * 60 * 24));
+    }
 
     function addDate (data) {
         var $date = $("#date_slt");
