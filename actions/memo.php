@@ -25,6 +25,22 @@
         case 'insert':
             echo insertMemo();
             break;
+
+        case 'list':
+            echo getMemoList($_GET["offset"], $_GET["size"]);
+            break;
+
+        case 'avatar':
+            echo getBabyAvatar($_GET["baby"]);
+            break;
+
+        case 'pic_count':
+            echo getPictureIds($_GET["id"]);
+            break;
+
+        case 'picture':
+            echo getPicture($_GET["id"]);
+            break;
     }
     $dba->disconnect();
 
@@ -75,5 +91,35 @@
     function removeMemo () {
         global $dba;
         return $dba->exec("DELETE FROM memo WHERE id = ". $_POST["id"]);
+    }
+
+    function getMemoList ($offset, $size) {
+        global $dba;
+        $result = $dba->query("SELECT * FROM memo ORDER BY date, time DESC LIMIT " . $offset . ", " . $size . ";");
+        return json_encode($result);
+    }
+
+    function getBabyAvatar ($baby_id) {
+        global $dba;
+        $result = $dba->query("SELECT avatar from baby WHERE id = ". $baby_id . ";", function($row){
+            return $row["avatar"];
+        });
+        return $result[0];
+    }
+
+    function getPictureIds ($memo_id) {
+        global $dba;
+        $result = $dba->query("SELECT id from picture WHERE memo = ". $memo_id . ";", function($row){
+            return $row["id"];
+        });
+        return json_encode($result);
+    }
+
+    function getPicture ($pic_id) {
+        global $dba;
+        $result = $dba->query("SELECT picture from picture WHERE id = ". $pic_id . ";", function($row){
+            return $row["picture"];
+        });
+        return $result[0];
     }
 ?>

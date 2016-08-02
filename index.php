@@ -94,7 +94,7 @@
                         </div>
                         <p class="weui_grid_label">体重</p>
                     </a>
-                    <a class="weui_grid" href="./actions/action.html?type=memo">
+                    <a class="weui_grid" href="./actions/memo.html">
                         <div class="weui_grid_icon">
                             <i class="icon icon_memo"></i>
                         </div>

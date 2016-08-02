@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>心情记录</title>
+<link rel="stylesheet" href="../style/weui.min.css"/>
+<link rel="stylesheet" href="../style/common.css"/>
+<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" charset="utf8" src="../js/jquery.bpopup.min.js"></script>
+<script type="text/javascript">
+$(function(){
+    var ACTIVE_COUNT = 15;
+    var MEMO_ITEM_TMPL = '<li class="memo_item">' +
+                           '<div class="memo_item_container">' +
+                               '<div class="avatarContainer">' +
+                                   '<img class="avatar"></img>' +
+                               '</div>' + 
+                               '<div class="memo_item_content">' +
+                                   '<div class="title"></div>' +
+                                   '<div class="memo_container">'+
+                                        '<div class="memo"></div>'+
+                                        '<div class="image_container"></div>'+
+                                   '</div>' +
+                                   '<div class="footer">' +
+                                        '<a class="icon edit" href="javascript:;"></a>' +
+                                        '<a class="icon delete" href="javascript:;"></a>' +
+                                        '<span class="date"></span>' +
+                                   '</div>' + 
+                               '</div>' + 
+                       '</li>';
+    var offset = 0;
+    getMemos();
+    
+    function getMemos () {
+        $.get("./memo.php", {offset: offset, size: ACTIVE_COUNT, type: "list"}, function(data){
+            console.log(data);
+            addMemos(data);
+        }, "json");
+    }
+    
+    function addMemos (data) {
+        var item, list = $("#memo_list"), length = data.length;
+        for (var i = 0; i < length; i++) {
+            item = data[i];
+            list.append(createMemoItem(item));
+        }
+        if (length === ACTIVE_COUNT) {
+            list.append($("<li class='more'><span>更多</span></li>"));
+        }
+    }
+
+    function createMemoItem (item) {
+        var $li = $(MEMO_ITEM_TMPL);
+        $li.attr("memo_id", item.id);
+        $("img.avatar", $li).attr("src", "./memo.php?type=avatar&baby="+item.baby);
+        $(".title", $li).text(item.title);      
+        $("div.memo", $li).text(item.memo);
+        $.get("./memo.php", {type: "pic_count", id: item.id}, function (data) {
+            var length = data.length, i = 0;
+            if (data instanceof Array && length > 0) {
+                for (;i<length;i++) {
+                    $("div.image_container", $li).append("<img class='imageContent' src='./memo.php?type=picture&id="+data[i]+"' />");
+                }
+            }
+        }, "json");
+        $("div.footer span.date", $li).text(new Date(item.date).toLocaleDateString());
+        return $li;
+    }
+    
+    $("#memo_list").on("click", function(e){
+        var $target =$(e.target);
+        if ($target.hasClass("edit")) {
+
+        } else if ($target.hasClass("delete")) {
+
+        } else if ($target.hasClass("imageContent")) {
+            e.preventDefault();
+            $('#preview').bPopup({
+                content:'image',
+                contentContainer:'#preview',
+                loadUrl: $target.attr("src")
+            });
+        }
+    });
+})
+</script>
+<style type="text/css">
+.panel .hd {
+    display: flex;
+    display: -webkit-flex;
+    padding: 0;
+    background-color: #3cc51f;
+}
+.panel .hd .page_title{
+    flex-grow: 1;
+    text-align: center;
+    color: #fbf9fe;
+}
+.panel .hd a.icon_back {
+    background-image: url("../images/icons/icon_back.png");
+}
+.panel .hd a.icon_new {
+    background-image: url("../images/icons/icon_new.png");
+}
+li.memo_item .footer {
+    float: right;
+    height: 2rem;
+}
+a.icon {
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+li.memo_item .footer a.edit {
+    background-image: url("../images/icons/icon_edit.png");
+}
+li.memo_item .footer a.delete {
+    background-image: url("../images/icons/icon_delete.png");
+}
+li.memo_item .footer span.date {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+            
+ul#memo_list {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+ul#memo_list li.memo_item {
+    border-bottom: 1px solid #EBEBEB;
+}
+ul#memo_list div.memo_item_container {
+    display: flex;
+    margin: 8px;
+}
+ul#memo_list div.avatarContainer {
+    width: 64px;
+    height: 64px;
+    flex-grow: 0;
+    flex-shrink: 0;
+}
+ul#memo_list img.avatar {
+    width: 100%;
+    height: 100%;
+}
+ul#memo_list div.memo_item_content {
+    margin-left: 8px;
+    flex-grow: 1;
+}
+ul#memo_list div.title {
+    color: #606C8D;
+    font-size: larger;
+}
+ul#memo_list div.memo_container {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: larger;
+}
+ul#memo_list img.imageContent {
+    max-height: 120px;
+}
+
+#preview {
+    max-height: 90%;
+    max-width: 90%;
+}
+</style>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="panel">
+            <div class="hd">
+                <a class="icon icon_back" href="../index.php"></a>
+                <h1 class="page_title">心情点滴</h1>
+                <a class="icon icon_new" href="./action.html?type=memo"></a>
+
+            </div>
+            <div class="bd">
+                <ul id="memo_list"></ul>
+            </div>
+        </div>
+    </div>
+    <div id="preview" style="display: none;"></div>
+    <div id="toast" style="display: none;">
+        <div class="weui_mask_transparent"></div>
+        <div class="weui_toast">
+            <i class="weui_icon_toast"></i>
+            <p class="weui_toast_content">已完成</p>
+        </div>
+    </div>
+</body>
+</html>
