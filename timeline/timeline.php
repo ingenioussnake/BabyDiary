@@ -24,7 +24,11 @@
 
     function getDates ($offset, $size) {
         global $dba;
-        $result = $dba->query("select date from dining UNION select date from sleep UNION select date from shit UNION select date from memo ORDER BY date DESC LIMIT " . $offset . ", " . $size . ";", function ($row) { return $row["date"];});
+        $tables = array("dining", "sleep", "shit", "memo", "height", "weight");
+        $stmt = implode(" UNION ", array_map(function($table){
+            return "SELECT date FROM ". $table;
+        }, $tables)) . " ORDER BY date DESC LIMIT " . $offset . ", " . $size . ";";
+        $result = $dba->query($stmt, function ($row) { return $row["date"];});
         return json_encode($result);
     }
 
