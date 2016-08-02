@@ -15,10 +15,6 @@
         case 'list':
             echo getList($_GET["date"]);
             break;
-
-        case 'picture':
-            echo getPictures($_GET["id"]);
-            break;
     }
     $dba->disconnect();
 
@@ -33,13 +29,12 @@
     }
 
     function getList ($date) {
-        $types = array("sleep", "shit", "height", "weight", "memo");
+        $actions = array("sleep", "shit", "height", "weight", "memo");
         $results = array();
         global $dba;
-        foreach ($types as $type) {
-            $result = $dba->query("select * from " . $type . " WHERE baby = 1 AND date = '" . $date. "';", function($row) use ($type) {
-                $row["type"] = $type;
-                return $row;
+        foreach ($actions as $action) {
+            $result = $dba->query("select * from " . $action . " WHERE baby = 1 AND date = '" . $date. "';", function($row) use ($action) {
+                return array("action"=>$action, "item"=>$row);
             });
             $results = array_merge($results, $result);
         }
@@ -47,23 +42,10 @@
         return json_encode($results);
     }
 
-    function getPictures ($id) {
-        global $dba;
-        $result = $dba->query("select picture from picture WHERE memo = '" . $id. "';", function($row) {
-            echo json_encode($row);
-            return $row["picture"];
-        });
-        if (count($result) > 0) {
-            header("Content-Type:image/*");
-            return $result[0];
-        }
-    }
-
     function getDiningList ($date) {
         global $dba;
         return $dba->query("select dining.id, dining.date, dining.start, dining.end, dining.appetite, dining.comment, food.name as food from dining inner join food on dining.food = food.id WHERE dining.baby = 1 AND dining.date = '" . $date. "' order by dining.start desc;", function($row) {
-            $row["type"] = "dining";
-            return $row;
+            return array("action"=>"dining", "item"=>$row);
         });
     }
 ?>

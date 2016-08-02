@@ -1,57 +1,52 @@
 <?php
-    if (!isset($_POST["type"]) || !isset($_POST["data"])) {
-        echo "wrong data";
-        exit;
-    }
     include '../db/dba.php';
-    $type = $_POST["type"];
-    $data = $_POST["data"];
+    $type = isset($_GET["type"]) ? $_GET["type"] : "insert";
     $dba = new DBA();
     $dba->connect();
     switch ($type) {
         case 'update':
-            echo updateDining($data);
+            echo updateDining();
             break;
 
         case 'remove':
-            echo removeDining($data);
+            echo removeDining();
             break;
 
-        default:
-            echo insert($type, $data);
+        case 'insert':
+            echo insertDining();
             break;
     }
     $dba->disconnect();
 
-    function insert ($type, $data) {
+    function insertDining () {
         global $dba;
         $columns = "id, baby";
         $values = "NULL, 1";
-        $data["food"] = getFoodId($data["food"]);
-        foreach ($data as $key => $value) {
+        $_POST["food"] = getFoodId($_POST["food"]);
+        foreach ($_POST as $key => $value) {
             $columns .= ", " . $key;
             $values .= ", '" . $value . "'";
         }
-        $stmt = "INSERT INTO " . $type . "(" . $columns . ") VALUES (" . $values . ")";
+        $stmt = "INSERT INTO dining (" . $columns . ") VALUES (" . $values . ")";
         return $dba->exec($stmt);
     }
 
-    function updateDining ($data) {
+    function updateDining () {
         global $dba;
         $set = "";
-        $data["food"] = getFoodId($data["food"]);
-        foreach ($data as $key => $value) {
-            if ($key != "id" && $key != "type" && $key != "baby") {
+        $_POST["food"] = getFoodId($_POST["food"]);
+        foreach ($_POST as $key => $value) {
+            if ($key != "id") {
                 $set .= $key . " = '" . $value . "', ";
             }
         }
         $set = substr($set, 0, -2); // remove the last ", "
-        return $dba->exec("UPDATE ". $data["type"]. " SET " . $set . " WHERE id = ". $data["id"]);
+        return $dba->exec("UPDATE dining SET " . $set . " WHERE id = ". $_POST["id"]);
     }
 
-    function removeDining ($data) {
+    function removeDining () {
         global $dba;
-        return $dba->exec("DELETE FROM ". $data["type"]. " WHERE id = ". $data["id"]);
+        return $dba->exec("DELETE FROM dining WHERE id = ". $_POST["id"]);
     }
 
     function getFoodId ($name) {

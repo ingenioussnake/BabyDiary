@@ -1,6 +1,6 @@
 $(function(){
     var LIST_ITEM_TMPL = "<li class='event'>"+
-                    "<input type='radio' name='tl-group' checked/>"+
+                    "<input type='radio' name='tl-group'/>"+
                     "<label></label>"+
                     "<div class='thumb'><span></span></div>"+
                     "<div class='content-perspective'>"+
@@ -60,7 +60,7 @@ $(function(){
 
     function showDayth () {
         var date = new Date($("#date_slt").val());
-        $(".dayth span").html((date - birthday) / (1000 * 60 * 60 * 24) + 1);
+        $(".dayth span").html((date - birthday) / (1000 * 60 * 60 * 24) + 1); // birtyday is the first day (not 0th)
     }
 
     function addDate (data) {
@@ -87,8 +87,8 @@ $(function(){
             if (data.length > 0) {
                 data.sort(function(a, b){
                     // for ios
-                    return new Date(b.date.replace(/-/g, "/") + " " + (b.start || b.time)) - 
-                            new Date(a.date.replace(/-/g, "/") + " " + (a.start || a.time));
+                    return new Date(b.item.date.replace(/-/g, "/") + " " + (b.item.start || b.item.time)) - 
+                            new Date(a.item.date.replace(/-/g, "/") + " " + (a.item.start || a.item.time));
                 });
                 addItems(data);
             }
@@ -102,13 +102,14 @@ $(function(){
             $item = $(LIST_ITEM_TMPL);
             $item.attr("idx", i);
             $list.append($item);
-            list.push({type: data[i].type, item: createItem(data[i], $item)});
+            list.push({action: data[i].action, item: createItem(data[i].item, data[i].action, $item)});
         }
+        $("li:first input:radio", $list).prop("checked", true);
     }
 
-    function createItem (data, $item) {
+    function createItem (data, action, $item) {
         var tl_item;
-        switch (data.type) {
+        switch (action) {
             case "dining":
                 tl_item = new DiningItem(data, $item);
             break;
@@ -146,7 +147,7 @@ $(function(){
     }
 
     function showEditDialog (item) {
-        var action = item.type;
+        var action = item.action;
         $("#edit_dialog .weui_dialog_bd").load("../actions/" + action + "_fragment.html", function(respond){
             if (!respond) return;
             applyData(item.item.getData());
@@ -159,19 +160,31 @@ $(function(){
     });
 
     $("#edit_dialog").on("click", ".weui_btn_dialog.primary", function(){
-        var data = loadData();
-        var item = operatingItem.item;
-        data.id = item.id;
-        data.type = operatingItem.type;
-        var url = item.getAjaxUrl ? item.getAjaxUrl() : "../actions/action.php";
-        $.post(url, {type: "update", data: data}, function(respond){
-            console.log(respond);
-            if (!!respond) {
-                $("#edit_dialog").hide();
-                updateData(data);
-                showToast($("#toast"));
-            }
-        });
+        var data = loadData(),
+            item = operatingItem.item,
+            ajaxSettings = {
+                url: "../actions/action.php",
+                type: "POST",
+                data: data,
+                success: function(respond){
+                    console.log(respond);
+                    if (!!respond) {
+                        $("#edit_dialog").hide();
+                        updateData(data);
+                        showToast($("#toast"));
+                    }
+                }
+            };
+        if (data instanceof FormData) {
+            data.append("id", item.id);
+        } else {
+            data.id = item.id;
+        }
+        if (item.getAjaxSettings) {
+            $.extend(ajaxSettings, item.getAjaxSettings());
+        }
+        ajaxSettings.url = ajaxSettings.url + "?type=update&action=" + operatingItem.action;
+        $.ajax(ajaxSettings);
     });
 
     $("#delete_dialog").on("click", ".weui_btn_dialog.default", function(){
@@ -179,9 +192,13 @@ $(function(){
     });
 
     $("#delete_dialog").on("click", ".weui_btn_dialog.primary", function(){
-        var item = operatingItem.item.getData();
-        item.type = operatingItem.type;
-        $.post("../actions/action.php", {type: "remove", data: item}, function(respond){
+        var item = operatingItem.item,
+            ajaxUrl = "../actions/action.php";
+        if (!!item.getAjaxSettings && !!item.getAjaxSettings().url) {
+            ajaxUrl = item.getAjaxSettings().url;
+        }
+        ajaxUrl = ajaxUrl + "?type=remove&action=" + operatingItem.action;
+        $.post(ajaxUrl, {id: item.id}, function(respond){
             console.log(respond);
             if (!!respond) {
                 $("#delete_dialog").hide();
@@ -192,7 +209,8 @@ $(function(){
     });
 
     function updateData (data) {
-        if (data.date !== operatingItem.item.date) {
+        var newDate = data instanceof FormData ? data.get("date") : data.date;
+        if (newDate !== operatingItem.item.date) {
             removeItem(operatingItem);
             return;
         }
@@ -202,6 +220,7 @@ $(function(){
     function removeItem (item) {
         var index = list.indexOf(item);
         $("li.event[idx="+ index +"]").remove();
-        list.splice(index, 1);
+        // list.splice(index, 1);
+        // cannot update list since the index doens't change
     }
 });

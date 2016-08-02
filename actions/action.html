@@ -31,15 +31,18 @@
             });
 
             $("#submit").on("click", function(){
-                var data = loadData();
-                $.ajax($.extend({
-                    type: "POST",
-                    data: data instanceof FormData ? data : { type: action, data: data},
-                    success: function (respond) {
-                        console.log(respond);
-                        respond == 1 && showToast($("#toast"));
-                    }
-                }, ajaxSettings));
+                var data = loadData(),
+                    settings = $.extend({
+                        url: "./action.php",
+                        type: "POST",
+                        data: data,
+                        success: function (respond) {
+                            console.log(respond);
+                            respond == 1 && showToast($("#toast"));
+                        }
+                    }, ajaxSettings);
+                settings.url = settings.url + "?type=insert&action=" + action;
+                $.ajax(settings);
             });
         });
     </script>

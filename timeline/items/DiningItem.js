@@ -44,6 +44,7 @@ DiningItem.prototype._updateView = function () {
     $(".thumb span", $item).html(removeNumberTail(this.start));
     $("h4", $item).html(DiningItem.DINING_TYPE[this.food]);
     if (this.food !== "mm") {
+        $(".appetite", $item).removeAttr("style");
         $(".appetite", $item).html(this.appetite + "勺");
     } else {
         $(".appetite", $item).css("display", "none");
@@ -53,6 +54,6 @@ DiningItem.prototype._updateView = function () {
     $(".to", $item).html(removeNumberTail(this.end));
 };
 
-DiningItem.prototype.getAjaxUrl = function () {
-    return "../actions/dining.php";
+DiningItem.prototype.getAjaxSettings = function () {
+    return {url: "../actions/dining.php"};
 };
