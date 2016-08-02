@@ -35,7 +35,7 @@ $(function(){
             getDates();
         } else {
             getList();
-            showBirthday();
+            showDayth();
         }
     });
 
@@ -52,15 +52,15 @@ $(function(){
             console.log(data);
             if (data.length > 0) {
                 addDate(data);
-                showBirthday();
+                showDayth();
                 getList();
             }
         }, "json");
     }
 
-    function showBirthday () {
+    function showDayth () {
         var date = new Date($("#date_slt").val());
-        $(".dayth span").html((date - birthday) / (1000 * 60 * 60 * 24));
+        $(".dayth span").html((date - birthday) / (1000 * 60 * 60 * 24) + 1);
     }
 
     function addDate (data) {
