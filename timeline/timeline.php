@@ -9,7 +9,7 @@
     $dba->connect();
     switch ($type) {
         case 'date':
-            echo getDates();
+            echo getDates($_GET["offset"], $_GET["size"]);
             break;
 
         case 'list':
@@ -22,9 +22,9 @@
     }
     $dba->disconnect();
 
-    function getDates () {
+    function getDates ($offset, $size) {
         global $dba;
-        $result = $dba->query("select date from dining UNION select date from sleep UNION select date from shit UNION select date from memo ORDER BY date DESC;", function ($row) { return $row["date"];});
+        $result = $dba->query("select date from dining UNION select date from sleep UNION select date from shit UNION select date from memo ORDER BY date DESC LIMIT " . $offset . ", " . $size . ";", function ($row) { return $row["date"];});
         return json_encode($result);
     }
 

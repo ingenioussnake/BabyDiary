@@ -16,26 +16,27 @@ $(function(){
                     "</div>"+
                 "</li>";
 
-    var list = [], operatingItem, birthday;
+    var list = [], operatingItem, birthday,
+        dateOffset = 0,
+        DATE_SIZE = 15;
 
-    $.get("./timeline.php", {type: "date"}, function(data){
-        console.log(data);
-        if (data.length > 0) {
-            addDate(data);
-            getList();
-            $.get("../profile/profile.php", {type: "birthday"}, function(data){
-                console.log(data);
-                birthday = new Date(data);
-                showBirthday();
-            });
-        }
+    $.get("../profile/profile.php", {type: "basic"}, function(info){
+        console.log(info);
+        birthday = new Date(info.birthday);
+        $("#baby_name").html(info.name);
+        getDates();
     }, "json");
 
-    
-
     $("#date_slt").on("change", function(){
-        getList();
-        showBirthday();
+        var date = $("#date_slt").val();
+        if (date === "more") {
+            dateOffset += DATE_SIZE;
+            $("#date_slt option[value=more]").remove();
+            getDates();
+        } else {
+            getList();
+            showBirthday();
+        }
     });
 
     $(".timeline").on("click", ".edit", function(e){
@@ -46,18 +47,35 @@ $(function(){
         deleteItem(getItemIndex($(e.target)));
     });
 
+    function getDates () {
+        $.get("./timeline.php", {type: "date", offset: dateOffset, size: DATE_SIZE}, function(data){
+            console.log(data);
+            if (data.length > 0) {
+                addDate(data);
+                showBirthday();
+                getList();
+            }
+        }, "json");
+    }
+
     function showBirthday () {
         var date = new Date($("#date_slt").val());
         $(".dayth span").html((date - birthday) / (1000 * 60 * 60 * 24));
     }
 
     function addDate (data) {
-        var $date = $("#date_slt");
-        $date.empty();
+        var $date = $("#date_slt"), $option;
+        // $date.empty();
         for (var i = 0; i < data.length; i++) {
-            var $option = $("<option />");
+            $option = $("<option />");
             $option.val(data[i]);
             $option.html(data[i]);
+            $date.append($option);
+        }
+        if (data.length === DATE_SIZE) {
+            $option = $("<option />");
+            $option.val("more");
+            $option.html("更多");
             $date.append($option);
         }
     }

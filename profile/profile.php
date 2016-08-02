@@ -6,8 +6,8 @@
         $type = $_GET["type"];
         if ($type == "info") {
             echo json_encode(getProfile(1));
-        } else if ($type == "birthday") {
-            echo getBirthday(1);
+        } else if ($type == "basic") {
+            echo json_encode(getBasicInfo(1));
         }
     }
     $dba->disconnect();
@@ -18,11 +18,9 @@
         return $result[0];
     }
 
-    function getBirthday ($baby_id) {
+    function getBasicInfo ($baby_id) {
         global $dba;
-        $result = $dba->query("SELECT birthday FROM baby WHERE id = ". $baby_id . ";", function($row){
-            return $row["birthday"];
-        });
+        $result = $dba->query("SELECT name, birthday FROM baby WHERE id = ". $baby_id . ";");
         return $result[0];
     }
 ?>
