@@ -64,37 +64,37 @@
             </div>
             <div class="bd">
                 <div class="weui_grids">
-                    <a class="weui_grid" href="./actions/new.html?type=dining">
+                    <a class="weui_grid" href="./actions/action.html?type=dining">
                         <div class="weui_grid_icon">
                             <i class="icon icon_dining"></i>
                         </div>
                         <p class="weui_grid_label">吃饭</p>
                     </a>
-                    <a class="weui_grid" href="./actions/new.html?type=sleep">
+                    <a class="weui_grid" href="./actions/action.html?type=sleep">
                         <div class="weui_grid_icon">
                             <i class="icon icon_sleep"></i>
                         </div>
                         <p class="weui_grid_label">睡觉</p>
                     </a>
-                    <a class="weui_grid" href="./actions/new.html?type=shit">
+                    <a class="weui_grid" href="./actions/action.html?type=shit">
                         <div class="weui_grid_icon">
                             <i class="icon icon_shit"></i>
                         </div>
                         <p class="weui_grid_label">拉臭</p>
                     </a>
-                    <a class="weui_grid" href="./actions/new.html?type=height">
+                    <a class="weui_grid" href="./actions/action.html?type=height">
                         <div class="weui_grid_icon">
                             <i class="icon icon_height"></i>
                         </div>
                         <p class="weui_grid_label">身高</p>
                     </a>
-                    <a class="weui_grid" href="./actions/new.html?type=weight">
+                    <a class="weui_grid" href="./actions/action.html?type=weight">
                         <div class="weui_grid_icon">
                             <i class="icon icon_weight"></i>
                         </div>
                         <p class="weui_grid_label">体重</p>
                     </a>
-                    <a class="weui_grid" href="./actions/new.html?type=memo">
+                    <a class="weui_grid" href="./actions/action.html?type=memo">
                         <div class="weui_grid_icon">
                             <i class="icon icon_memo"></i>
                         </div>

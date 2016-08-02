@@ -10,11 +10,11 @@
     $dba->connect();
     switch ($type) {
         case 'update':
-            echo updateAction($data);
+            echo updateDining($data);
             break;
 
         case 'remove':
-            echo removeAction($data);
+            echo removeDining($data);
             break;
 
         default:
@@ -36,7 +36,7 @@
         return $dba->exec($stmt);
     }
 
-    function updateAction ($data) {
+    function updateDining ($data) {
         global $dba;
         $set = "";
         $data["food"] = getFoodId($data["food"]);
@@ -49,7 +49,7 @@
         return $dba->exec("UPDATE ". $data["type"]. " SET " . $set . " WHERE id = ". $data["id"]);
     }
 
-    function removeAction ($data) {
+    function removeDining ($data) {
         global $dba;
         return $dba->exec("DELETE FROM ". $data["type"]. " WHERE id = ". $data["id"]);
     }
