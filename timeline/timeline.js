@@ -87,8 +87,8 @@ $(function(){
             if (data.length > 0) {
                 data.sort(function(a, b){
                     // for ios
-                    return new Date(a.date.replace(/-/g, "/") + " " + (a.start || a.time)) - 
-                            new Date(b.date.replace(/-/g, "/") + " " + (b.start || b.time));
+                    return new Date(b.date.replace(/-/g, "/") + " " + (b.start || b.time)) - 
+                            new Date(a.date.replace(/-/g, "/") + " " + (a.start || a.time));
                 });
                 addItems(data);
             }
@@ -97,10 +97,11 @@ $(function(){
 
     function addItems (data) {
         var $list = $(".timeline"), $item;
+        list = [];
         for (var i = 0; i < data.length; i++) {
             $item = $(LIST_ITEM_TMPL);
             $item.attr("idx", i);
-            $list.prepend($item);
+            $list.append($item);
             list.push({type: data[i].type, item: createItem(data[i], $item)});
         }
     }
