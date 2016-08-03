@@ -24,6 +24,7 @@
     <script type="text/javascript">
         $(function(){
             var action = getUrlParam("type") || "dining";
+            $("#toast_container").load("./toast.html");
             $(".bd").load("./" + action + "_fragment.html", function(respond){
                 if (!respond) return;
                 $(".page_title").html(page_title);
@@ -61,12 +62,6 @@
                 <a id="submit" class="weui_btn weui_btn_primary" href="../index.php">返回</a>
             </div>
         </div>
-        <div id="toast" style="display: none;">
-            <div class="weui_mask_transparent"></div>
-            <div class="weui_toast">
-                <i class="weui_icon_toast"></i>
-                <p class="weui_toast_content">已完成</p>
-            </div>
-        </div>
+        <div id="toast_container"></div>
     </div>
 </body>

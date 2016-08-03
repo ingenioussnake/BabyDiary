@@ -47,6 +47,10 @@ $(function(){
         deleteItem(getItemIndex($(e.target)));
     });
 
+    $("#edit_dialog_container").load("../actions/edit_dialog.html", initEditDialog);
+    $("#delete_dialog_container").load("../actions/delete_dialog.html", initDeleteDialog);
+    $("#toast_container").load("../actions/toast.html");
+
     function getDates () {
         $.get("./timeline.php", {type: "date", offset: dateOffset, size: DATE_SIZE}, function(data){
             console.log(data);
@@ -155,58 +159,62 @@ $(function(){
         });
     }
 
-    $("#edit_dialog").on("click", ".weui_btn_dialog.default", function(){
-        $("#edit_dialog").hide();
-    });
-
-    $("#edit_dialog").on("click", ".weui_btn_dialog.primary", function(){
-        var data = loadData(),
-            item = operatingItem.item,
-            ajaxSettings = {
-                url: "../actions/action.php",
-                type: "POST",
-                data: data,
-                success: function(respond){
-                    console.log(respond);
-                    if (!!respond) {
-                        $("#edit_dialog").hide();
-                        updateData(data);
-                        showToast($("#toast"));
-                    }
-                }
-            };
-        if (data instanceof FormData) {
-            data.append("id", item.id);
-        } else {
-            data.id = item.id;
-        }
-        if (item.getAjaxSettings) {
-            $.extend(ajaxSettings, item.getAjaxSettings());
-        }
-        ajaxSettings.url = ajaxSettings.url + "?type=update&action=" + operatingItem.action;
-        $.ajax(ajaxSettings);
-    });
-
-    $("#delete_dialog").on("click", ".weui_btn_dialog.default", function(){
-        $("#delete_dialog").hide();
-    });
-
-    $("#delete_dialog").on("click", ".weui_btn_dialog.primary", function(){
-        var item = operatingItem.item,
-            ajaxUrl = "../actions/action.php";
-        if (!!item.getAjaxSettings && !!item.getAjaxSettings().url) {
-            ajaxUrl = item.getAjaxSettings().url;
-        }
-        ajaxUrl = ajaxUrl + "?type=remove&action=" + operatingItem.action;
-        $.post(ajaxUrl, {id: item.id}, function(respond){
-            console.log(respond);
-            if (!!respond) {
-                $("#delete_dialog").hide();
-                removeItem(operatingItem);
-                showToast($("#toast"));
-            }
+    function initEditDialog () {
+        $("#edit_dialog").on("click", ".weui_btn_dialog.default", function(){
+            $("#edit_dialog").hide();
         });
-    });
+
+        $("#edit_dialog").on("click", ".weui_btn_dialog.primary", function(){
+            var data = loadData(),
+                item = operatingItem.item,
+                ajaxSettings = {
+                    url: "../actions/action.php",
+                    type: "POST",
+                    data: data,
+                    success: function(respond){
+                        console.log(respond);
+                        if (!!respond) {
+                            $("#edit_dialog").hide();
+                            updateData(data);
+                            showToast();
+                        }
+                    }
+                };
+            if (data instanceof FormData) {
+                data.append("id", item.id);
+            } else {
+                data.id = item.id;
+            }
+            if (item.getAjaxSettings) {
+                $.extend(ajaxSettings, item.getAjaxSettings());
+            }
+            ajaxSettings.url = ajaxSettings.url + "?type=update&action=" + operatingItem.action;
+            $.ajax(ajaxSettings);
+        });
+    }
+
+    function initDeleteDialog () {
+        $("#delete_dialog").on("click", ".weui_btn_dialog.default", function(){
+            $("#delete_dialog").hide();
+        });
+
+        $("#delete_dialog").on("click", ".weui_btn_dialog.primary", function(){
+            var item = operatingItem.item,
+                ajaxUrl = "../actions/action.php";
+            if (!!item.getAjaxSettings && !!item.getAjaxSettings().url) {
+                ajaxUrl = item.getAjaxSettings().url;
+            }
+            ajaxUrl = ajaxUrl + "?type=remove&action=" + operatingItem.action;
+            $.post(ajaxUrl, {id: item.id}, function(respond){
+                console.log(respond);
+                if (!!respond) {
+                    $("#delete_dialog").hide();
+                    removeItem(operatingItem);
+                    showToast();
+                }
+            });
+        });
+    }
 
     function updateData (data) {
         var newDate = data instanceof FormData ? data.get("date") : data.date;

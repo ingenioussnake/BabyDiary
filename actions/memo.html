@@ -29,7 +29,7 @@ $(function(){
                                    '</div>' + 
                                '</div>' + 
                        '</li>';
-    var offset = 0;
+    var offset = 0, list = [], operatingItem;
     getMemos();
     
     function getMemos () {
@@ -40,23 +40,28 @@ $(function(){
     }
     
     function addMemos (data) {
-        var item, list = $("#memo_list"), length = data.length;
+        var item, $item, $list = $("#memo_list"), length = data.length, listLength = list.length;
         for (var i = 0; i < length; i++) {
             item = data[i];
-            list.append(createMemoItem(item));
+            $item = $(MEMO_ITEM_TMPL);
+            updateMemoItem(item, $item, true);
+            $item.attr("idx", listLength + i);
+            $list.append($item);
+            list.push(item);
         }
         if (length === ACTIVE_COUNT) {
-            list.append($("<li class='more'><span>更多</span></li>"));
+            $("a.more").show();
+        } else {
+            $("a.more").hide();
         }
     }
 
-    function createMemoItem (item) {
-        var $li = $(MEMO_ITEM_TMPL);
+    function updateMemoItem (item, $li, updatePicture) {
         $li.attr("memo_id", item.id);
-        $("img.avatar", $li).attr("src", "./memo.php?type=avatar&baby="+item.baby);
+        updatePicture && $("img.avatar", $li).attr("src", "./memo.php?type=avatar&baby="+item.baby);
         $(".title", $li).text(item.title);      
         $("div.memo", $li).text(item.memo);
-        $.get("./memo.php", {type: "pic_count", id: item.id}, function (data) {
+        updatePicture && $.get("./memo.php", {type: "pic_count", id: item.id}, function (data) {
             var length = data.length, i = 0;
             if (data instanceof Array && length > 0) {
                 for (;i<length;i++) {
@@ -65,15 +70,16 @@ $(function(){
             }
         }, "json");
         $("div.footer span.date", $li).text(new Date(item.date).toLocaleDateString());
-        return $li;
     }
     
     $("#memo_list").on("click", function(e){
-        var $target =$(e.target);
+        var $target =$(e.target),
+            idx = $target.closest("li.memo_item").attr("idx");
+            operatingItem = list[idx];
         if ($target.hasClass("edit")) {
-
+            showEditDialog(operatingItem);
         } else if ($target.hasClass("delete")) {
-
+            showDeleteDialog();
         } else if ($target.hasClass("imageContent")) {
             e.preventDefault();
             $('#preview').bPopup({
@@ -83,6 +89,87 @@ $(function(){
             });
         }
     });
+
+    $(".weui_btn.more").on("click", function(){
+        offset = offset + ACTIVE_COUNT;
+        getMemos();
+    })
+
+    function showEditDialog (item) {
+        $("#edit_dialog .weui_dialog_bd").load("../actions/memo_fragment.html", function(respond){
+            if (!respond) return;
+            applyData(item);
+            $("#edit_dialog").show();
+        });
+    }
+
+    function showDeleteDialog () {
+        $("#delete_dialog").show();
+    }
+
+    $("#edit_dialog_container").load("../actions/edit_dialog.html", initEditDialog);
+    $("#delete_dialog_container").load("../actions/delete_dialog.html", initDeleteDialog);
+    $("#toast_container").load("../actions/toast.html");
+
+    function initEditDialog () {
+        $("#edit_dialog").on("click", ".weui_btn_dialog.default", function(){
+            $("#edit_dialog").hide();
+        });
+
+        $("#edit_dialog").on("click", ".weui_btn_dialog.primary", function(){
+            var data = loadData();
+            data.append("id", operatingItem.id);
+            $.ajax({
+                url: "../actions/memo.php?type=update&action=memo",
+                type: "POST",
+                data: data,
+                contentType: false, // 告诉jQuery不要去处理发送的数据
+                processData: false, // 告诉jQuery不要去设置Content-Type请求头
+                success: function(respond){
+                    console.log(respond);
+                    if (!!respond) {
+                        $("#edit_dialog").hide();
+                        updateItem(data);
+                        showToast();
+                    }
+                }
+            });
+        });
+    }
+
+    function initDeleteDialog () {
+        $("#delete_dialog").on("click", ".weui_btn_dialog.default", function(){
+            $("#delete_dialog").hide();
+        });
+
+        $("#delete_dialog").on("click", ".weui_btn_dialog.primary", function(){
+            $.post("../actions/memo.php?type=remove&action=memo", {id: operatingItem.id}, function(respond){
+                console.log(respond);
+                if (!!respond) {
+                    $("#delete_dialog").hide();
+                    removeItem(operatingItem);
+                    showToast();
+                }
+            });
+        });
+    }
+
+    function updateItem (item) {
+        var $li = $("li.memo_item[idx="+ list.indexOf(operatingItem) +"]", "#memo_list");
+        var data = {
+            baby: item.get("baby"),
+            date: item.get("date"),
+            id: item.get("id"),
+            memo: item.get("memo"),
+            title: item.get("title"),
+            time: item.get("time"),
+        };
+        updateMemoItem(data, $li);
+    }
+
+    function removeItem (item) {
+        $("li.memo_item[idx="+ list.indexOf(item) +"]", "#memo_list").remove();
+    }
 })
 </script>
 <style type="text/css">
@@ -173,12 +260,19 @@ ul#memo_list img.imageContent {
 #preview {
     max-height: 90%;
     max-width: 90%;
+    min-width: auto;
+    min-height: auto;
+}
+
+#preview img {
+    max-width: 100%;
+    max-height: 100%;
 }
 </style>
 </head>
 <body>
     <div class="container" id="container">
-        <div class="panel">
+        <div class="panel button">
             <div class="hd">
                 <a class="icon icon_back" href="../index.php"></a>
                 <h1 class="page_title">心情点滴</h1>
@@ -188,15 +282,14 @@ ul#memo_list img.imageContent {
             <div class="bd">
                 <ul id="memo_list"></ul>
             </div>
+            <div class="button_sp_area">
+                <a href="javascript:;" class="weui_btn weui_btn_plain_default more">更多</a>
+            </div>
         </div>
     </div>
     <div id="preview" style="display: none;"></div>
-    <div id="toast" style="display: none;">
-        <div class="weui_mask_transparent"></div>
-        <div class="weui_toast">
-            <i class="weui_icon_toast"></i>
-            <p class="weui_toast_content">已完成</p>
-        </div>
-    </div>
+    <div id="toast_container"></div>
+    <div id="edit_dialog_container"></div>
+    <div id="delete_dialog_container"></div>
 </body>
 </html>

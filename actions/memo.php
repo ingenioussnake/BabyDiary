@@ -95,7 +95,7 @@
 
     function getMemoList ($offset, $size) {
         global $dba;
-        $result = $dba->query("SELECT * FROM memo ORDER BY date, time DESC LIMIT " . $offset . ", " . $size . ";");
+        $result = $dba->query("SELECT * FROM memo ORDER BY date DESC, time DESC LIMIT " . $offset . ", " . $size . ";");
         return json_encode($result);
     }
 
