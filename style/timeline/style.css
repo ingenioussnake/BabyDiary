@@ -1,3 +1,17 @@
+/*@import url('demo.css');*/
+
+@font-face {
+	font-family: 'fontawesome-selected';
+	src: url("font/fontawesome-selected.eot");
+	src: 
+	url("font/fontawesome-selected.eot?#iefix") format('embedded-opentype'), 
+	url("font/fontawesome-selected.woff") format('woff'), 
+	url("font/fontawesome-selected.ttf") format('truetype'), 
+	url("font/fontawesome-selected.svg#fontawesome-selected") format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
 .timeline {
 	position: relative;
 	list-style-type: none;
@@ -60,6 +74,22 @@
 	position: absolute;
 	bottom: -30px;
 }
+
+.type_fm {
+	background-image: url(../../images/fm.jpg);
+}
+
+.type_mm {
+	background-image: url(../../images/mm.jpg);
+}
+
+.type_shit {
+	background-image: url(../../images/shit.jpg);
+}
+
+.type_sleep {
+	background-image: url(../../images/sleep.jpg);
+}
 /* Transparent Checkbox/radio hack: leave the checkbox on top, hide it with opacity 0 */
 
 .event label,
@@ -79,6 +109,7 @@
 }
 
 .event label:after {
+	font-family: 'fontawesome-selected';
 	content: '\e702';
 	background: #fff;
 	border-radius: 50%;
@@ -161,6 +192,7 @@
 }
 
 .content-inner:before {
+	font-family: 'fontawesome-selected';
 	content: '\25c2';
 	font-weight: normal;
 	font-size: 54px;
