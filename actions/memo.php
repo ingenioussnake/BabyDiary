@@ -120,6 +120,7 @@
         $result = $dba->query("SELECT picture from picture WHERE id = ". $pic_id . ";", function($row){
             return $row["picture"];
         });
+        header("Content-Type:image/*");
         return $result[0];
     }
 ?>
