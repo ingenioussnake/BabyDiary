@@ -86,6 +86,8 @@ $(function(){
                 content:'image',
                 contentContainer:'#preview',
                 loadUrl: $target.attr("src")
+            }, function(){
+                $("#preview img").css({"max-height": "100%", "max-width": "100%"});
             });
         }
     });
