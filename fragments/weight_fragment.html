@@ -19,27 +19,3 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    var page_title = "宝宝长肉咯",
-        $form = $(".action_form"),
-        ajaxSettings = {};
-
-    function applyData (data) {
-        if (!data) {
-            var curr = new Date();
-            $("#date", $form).val(getDate(curr));
-            $("#time", $form).val(getTime(curr));
-        } else {
-            $("#date", $form).val(data.date);
-            $("#time", $form).val(data.time);
-            $("#weight", $form).val(data.weight);
-        }
-    }
-    function loadData () {
-        return { 
-            date: $("#date", $form).val(),
-            time: $("#time", $form).val(),
-            weight: $("#weight", $form).val()
-        };
-    }
-</script>

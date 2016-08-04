@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <title>宝宝的一天</title>
-    <link rel="stylesheet" href="../style/weui.min.css"/>
-    <link rel="stylesheet" href="../style/common.css"/>
-    <link rel="stylesheet" href="../style/timeline/style.css"/>
+    <link rel="stylesheet" href="./style/weui.min.css"/>
+    <link rel="stylesheet" href="./style/common.css"/>
+    <link rel="stylesheet" href="./style/timeline/style.css"/>
     <style type="text/css">
         .weui_cells {
             margin-top: 0px;
@@ -26,47 +26,39 @@
             background-size: contain;
         }
         p.item_tlb a.edit {
-            background-image: url("../images/icons/icon_edit.png");
+            background-image: url("./images/icons/icon_edit.png");
         }
         p.item_tlb a.delete {
-            background-image: url("../images/icons/icon_delete.png");
+            background-image: url("./images/icons/icon_delete.png");
         }
 
         .type_fm {
-            background-image: url(../images/timeline/fm.jpg);
+            background-image: url(./images/timeline/fm.jpg);
         }
         .type_mm {
-            background-image: url(../images/timeline/mm.png);
+            background-image: url(./images/timeline/mm.png);
         }
         .type_mx {
-            background-image: url(../images/timeline/mx.jpg);
+            background-image: url(./images/timeline/mx.jpg);
         }
         .type_shit {
-            background-image: url(../images/timeline/shit.jpg);
+            background-image: url(./images/timeline/shit.jpg);
         }
         .type_sleep {
-            background-image: url(../images/timeline/sleep.jpg);
+            background-image: url(./images/timeline/sleep.jpg);
         }
         .type_height {
-            background-image: url(../images/timeline/height.jpg);
+            background-image: url(./images/timeline/height.jpg);
         }
         .type_weight {
-            background-image: url(../images/timeline/weight.jpg);
+            background-image: url(./images/timeline/weight.jpg);
         }
         .type_memo {
-            background-image: url(../images/timeline/memo.jpg);
+            background-image: url(./images/timeline/memo.jpg);
         }
     </style>
-    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
-    <script src="../js/util.js"></script>
-    <script src="../js/ModernizrTimeline.js"></script>
-    <script src="./timeline.js"></script>
-    <script src="./items/DiningItem.js"></script>
-    <script src="./items/SleepItem.js"></script>
-    <script src="./items/ShitItem.js"></script>
-    <script src="./items/HeightItem.js"></script>
-    <script src="./items/WeightItem.js"></script>
-    <script src="./items/MemoItem.js"></script>
+    <script src="./js/libs/ModernizrTimeline.js"></script>
+    <script type="text/javascript" src="./js/libs/require.js" data-main="./js/timeline" ></script>
     
 </head>
 

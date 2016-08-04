@@ -1,15 +1,16 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-<title>心情记录</title>
-<link rel="stylesheet" href="../style/weui.min.css"/>
-<link rel="stylesheet" href="../style/common.css"/>
-<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
-<script type="text/javascript" charset="utf8" src="../js/jquery.bpopup.min.js"></script>
-<script type="text/javascript">
-$(function(){
+require.config({
+    "paths": {
+        "jquery": "./libs/jquery-1.8.0.min",
+        "jquery.popup": "./libs/jquery.bpopup.min"
+    },
+    "shim": {
+        "jquery.popup": ["jquery"]
+    }
+});
+
+require(["model/MemoItem", "jquery", "jquery.popup"],
+function(MemoItem, $){
+
     var ACTIVE_COUNT = 15;
     var MEMO_ITEM_TMPL = '<li class="memo_item">' +
                            '<div class="memo_item_container">' +
@@ -33,7 +34,7 @@ $(function(){
     getMemos();
     
     function getMemos () {
-        $.get("./memo.php", {offset: offset, size: ACTIVE_COUNT, type: "list"}, function(data){
+        $.get("./db/memo.php", {offset: offset, size: ACTIVE_COUNT, type: "list"}, function(data){
             console.log(data);
             addMemos(data);
         }, "json");
@@ -47,7 +48,7 @@ $(function(){
             updateMemoItem(item, $item, true);
             $item.attr("idx", listLength + i);
             $list.append($item);
-            list.push(item);
+            list.push(new MemoItem(item));
         }
         if (length === ACTIVE_COUNT) {
             $("a.more").show();
@@ -58,14 +59,14 @@ $(function(){
 
     function updateMemoItem (item, $li, updatePicture) {
         $li.attr("memo_id", item.id);
-        updatePicture && $("img.avatar", $li).attr("src", "./memo.php?type=avatar&baby="+item.baby);
+        updatePicture && $("img.avatar", $li).attr("src", "./db/memo.php?type=avatar&baby="+item.baby);
         $(".title", $li).text(item.title);      
         $("div.memo", $li).text(item.memo);
-        updatePicture && $.get("./memo.php", {type: "pic_count", id: item.id}, function (data) {
+        updatePicture && $.get("./db/memo.php", {type: "pic_count", id: item.id}, function (data) {
             var length = data.length, i = 0;
             if (data instanceof Array && length > 0) {
                 for (;i<length;i++) {
-                    $("div.image_container", $li).append("<img class='imageContent' src='./memo.php?type=picture&id="+data[i]+"' />");
+                    $("div.image_container", $li).append("<img class='imageContent' src='./db/memo.php?type=picture&id="+data[i]+"' />");
                 }
             }
         }, "json");
@@ -98,9 +99,7 @@ $(function(){
     })
 
     function showEditDialog (item) {
-        $("#edit_dialog .weui_dialog_bd").load("../actions/memo_fragment.html", function(respond){
-            if (!respond) return;
-            applyData(item);
+        item.createForm($("#edit_dialog .weui_dialog_bd"), function(){
             $("#edit_dialog").show();
         });
     }
@@ -109,9 +108,9 @@ $(function(){
         $("#delete_dialog").show();
     }
 
-    $("#edit_dialog_container").load("../actions/edit_dialog.html", initEditDialog);
-    $("#delete_dialog_container").load("../actions/delete_dialog.html", initDeleteDialog);
-    $("#toast_container").load("../actions/toast.html");
+    $("#edit_dialog_container").load("./fragments/edit_dialog.html", initEditDialog);
+    $("#delete_dialog_container").load("./fragments/delete_dialog.html", initDeleteDialog);
+    $("#toast_container").load("./fragments/toast.html");
 
     function initEditDialog () {
         $("#edit_dialog").on("click", ".weui_btn_dialog.default", function(){
@@ -119,10 +118,10 @@ $(function(){
         });
 
         $("#edit_dialog").on("click", ".weui_btn_dialog.primary", function(){
-            var data = loadData();
+            var data = operatingItem.getFormData();
             data.append("id", operatingItem.id);
             $.ajax({
-                url: "../actions/memo.php?type=update&action=memo",
+                url: "./db/memo.php?type=update&action=memo",
                 type: "POST",
                 data: data,
                 contentType: false, // 告诉jQuery不要去处理发送的数据
@@ -145,7 +144,7 @@ $(function(){
         });
 
         $("#delete_dialog").on("click", ".weui_btn_dialog.primary", function(){
-            $.post("../actions/memo.php?type=remove&action=memo", {id: operatingItem.id}, function(respond){
+            $.post("./db/memo.php?type=remove&action=memo", {id: operatingItem.id}, function(respond){
                 console.log(respond);
                 if (!!respond) {
                     $("#delete_dialog").hide();
@@ -172,131 +171,4 @@ $(function(){
     function removeItem (item) {
         $("li.memo_item[idx="+ list.indexOf(item) +"]", "#memo_list").remove();
     }
-})
-</script>
-<style type="text/css">
-.panel .hd {
-    display: flex;
-    display: -webkit-flex;
-    padding: 0;
-    background-color: #3cc51f;
-    padding-top: 5px;
-    padding-bottom: 5px;
-}
-.panel .hd .page_title{
-    flex-grow: 1;
-    -webkit-flex-grow: 1;
-    text-align: center;
-    color: #fbf9fe;
-    font-size: 1.5rem;
-}
-.panel .hd a.icon_back {
-    background-image: url("../images/icons/icon_back.png");
-}
-.panel .hd a.icon_new {
-    background-image: url("../images/icons/icon_new.png");
-}
-li.memo_item .footer {
-    float: right;
-    height: 2rem;
-}
-a.icon {
-    width: 2rem;
-    height: 2rem;
-    display: inline-block;
-    margin-left: 0.5rem;
-    margin-right: 0.5rem;
-    margin-top: auto;
-    margin-bottom: auto;
-    background-size: contain;
-    background-repeat: no-repeat;
-}
-li.memo_item .footer a.edit {
-    background-image: url("../images/icons/icon_edit.png");
-}
-li.memo_item .footer a.delete {
-    background-image: url("../images/icons/icon_delete.png");
-}
-li.memo_item .footer span.date {
-    margin-top: auto;
-    margin-bottom: auto;
-}
-            
-ul#memo_list {
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    list-style-type: none;
-}
-
-ul#memo_list li.memo_item {
-    border-bottom: 1px solid #EBEBEB;
-}
-ul#memo_list div.memo_item_container {
-    display: -webkit-flex;
-    display: flex;
-    margin: 8px;
-}
-ul#memo_list div.memo {
-    white-space: pre-wrap;
-}
-ul#memo_list div.avatarContainer {
-    width: 64px;
-    height: 64px;
-    -webkit-flex-grow: 0;
-    flex-grow: 0;
-    -webkit-flex-shrink: 0;
-    flex-shrink: 0;
-}
-ul#memo_list img.avatar {
-    width: 100%;
-    height: 100%;
-}
-ul#memo_list div.memo_item_content {
-    margin-left: 8px;
-    -webkit-flex-grow: 1;
-    flex-grow: 1;
-}
-ul#memo_list div.title {
-    color: #606C8D;
-    font-size: larger;
-}
-ul#memo_list div.memo_container {
-    margin-top: 8px;
-    margin-bottom: 8px;
-    font-size: larger;
-}
-ul#memo_list img.imageContent {
-    max-height: 120px;
-    margin-right: 5px;
-}
-
-#preview {
-    max-height: 90%;
-    max-width: 90%;
-}
-</style>
-</head>
-<body>
-    <div class="container" id="container">
-        <div class="panel button">
-            <div class="hd">
-                <a class="icon icon_back" href="../index.php"></a>
-                <h1 class="page_title">心情点滴</h1>
-                <a class="icon icon_new" href="./action.html?type=memo"></a>
-
-            </div>
-            <div class="bd">
-                <ul id="memo_list"></ul>
-            </div>
-            <div class="button_sp_area">
-                <a href="javascript:;" class="weui_btn weui_btn_plain_default more">更多</a>
-            </div>
-        </div>
-    </div>
-    <div id="preview" style="display: none;"></div>
-    <div id="toast_container"></div>
-    <div id="edit_dialog_container"></div>
-    <div id="delete_dialog_container"></div>
-</body>
-</html>
+});

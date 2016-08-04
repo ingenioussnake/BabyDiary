@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <title>宝宝档案</title>
-    <link rel="stylesheet" href="../style/weui.min.css"/>
-    <link rel="stylesheet" href="../style/common.css"/>
-    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.8.0.min.js"></script>
+    <link rel="stylesheet" href="./style/weui.min.css"/>
+    <link rel="stylesheet" href="./style/common.css"/>
+    <script src="./js/libs/jquery-3.0.1.min.js"></script>
     <script type="text/javascript">
         $(function(){
-            $.get("./profile.php", {type: "info"}, function(data){
+            $.get("./db/profile.php", {type: "info"}, function(data){
                 $(".baby_name").html(data.name);
                 $(".baby_sex").html(data.sex === "1" ? "男" : "女");
                 $(".baby_blood_type").html(data.blood);
@@ -35,7 +35,7 @@
                                 <h4 class="weui_media_title">头像</h4>
                             </div>
                             <div class="weui_media_hd baby_avatar">
-                                <img class="weui_media_appmsg_thumb" alt="" src="./profile.php?type=avatar">
+                                <img class="weui_media_appmsg_thumb" alt="" src="./db/profile.php?type=avatar">
                             </div>
                         </a>
                     </div>

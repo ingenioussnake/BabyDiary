@@ -53,8 +53,8 @@
 </div>
 <style type="text/css">
     .weui_uploader_file {
-            position: relative;
-        }
+        position: relative;
+    }
     .weui_uploader_file a.delete {
         width: 32px;
         height: 32px;
@@ -65,59 +65,3 @@
         right: 0px;
     }
 </style>
-<script type="text/javascript">
-    var page_title = "宝宝爱你咯",
-        $form = $(".action_form"),
-        ajaxSettings = {
-            url: "./memo.php",
-            contentType: false, // 告诉jQuery不要去处理发送的数据
-            processData: false  // 告诉jQuery不要去设置Content-Type请求头
-        };
-
-    var file_list = [],
-        $preview = $(".weui_uploader_files"),
-        oFileReader, $img;
-    $("#pics").on("change", function(e){
-        for (var i = 0; i < this.files.length; i++) {
-            oFileReader = new FileReader();
-            oFileReader.onload = function (e) {
-                $img = $("<li><a class='delete' href='javascript:;'></a></li>");
-                $img.addClass("weui_uploader_file");
-                $img.css("background-image", "url("+e.target.result+")");
-                $preview.append($img);
-            };
-            oFileReader.readAsDataURL(this.files[i]);
-            file_list.push(this.files[i]);
-        }
-    });
-    $(".weui_uploader_files").on("click", "a.delete", function(e){
-        $img = $(e.target).parent();
-        var index = $img.index();
-        file_list.splice(index, 1);
-        $img.remove();
-    });
-    function applyData (data) {
-        if (!data) {
-            var curr = new Date();
-            $("#date", $form).val(getDate(curr));
-            $("#time", $form).val(getTime(curr));
-        } else {
-            $("#date", $form).val(data.date);
-            $("#time", $form).val(data.time);
-            $("#title").val(data.title);
-            $("#memo").val(data.memo);
-            $(".picture_cell").hide();
-        }
-    }
-    function loadData () {
-        var data = new FormData();
-        data.append("date", $("#date", $form).val());
-        data.append("time", $("#time", $form).val());
-        data.append("title", $("#title", $form).val());
-        data.append("memo", $("#memo", $form).val());
-        file_list.forEach(function(file){
-            data.append("picture[]", file);
-        });
-        return data;
-    }
-</script>

@@ -3,7 +3,7 @@
         echo "wrong get";
         exit;
     }
-    include '../db/dba.php';
+    include './dba.php';
     $type = $_GET["type"];
     $dba = new DBA();
     $dba->connect();

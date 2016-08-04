@@ -1,5 +1,5 @@
 <?php
-    include '../db/dba.php';
+    include './dba.php';
     $type = isset($_GET["type"]) ? $_GET["type"] : "insert";
     $imageType = array(
         'image/jpg',

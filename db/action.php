@@ -3,7 +3,7 @@
         echo "wrong data";
         exit;
     }
-    include '../db/dba.php';
+    include './dba.php';
     $type = $_GET["type"];
     $table = $_GET["action"];
     $dba = new DBA();

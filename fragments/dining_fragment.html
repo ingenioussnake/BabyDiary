@@ -51,7 +51,7 @@
     <div class="weui_cell appetite_cell" style="display: none;">
         <div class="weui_cell_hd"><label class="weui_label">饭量</label></div>
         <div class="weui_cell_bd weui_cell_primary">
-            <input class="weui_input" type="number" id="appetite">
+            <input class="weui_input" type="number" id="appetite" style="width: 3rem;">
             <span>勺</span>
         </div>
     </div>
@@ -63,54 +63,3 @@
         </div>
     </div>
 </div>
-<style type="text/css">
-    .appetite_cell input{
-        width: 3rem;
-    }
-</style>
-<script type="text/javascript">
-    var page_title = "宝宝吃饭咯",
-        $form = $(".action_form"),
-        ajaxSettings = {
-            url: "./dining.php"
-        };
-
-    $("input:radio").on("change", function(){
-        if ($("input[name=food]:radio:checked").val() !== "mm") {
-            $(".appetite_cell").removeAttr("style");
-        } else {
-            $(".appetite_cell").css("display", "none");
-            $(".appetite_cell input").val(0);
-        }
-    });
-
-    function applyData (data) {
-        if (!data) {
-            var curr = new Date();
-            $("#date", $form).val(getDate(curr));
-            $("#start", $form).val(getTime(curr));
-        } else {
-            $("#date", $form).val(data.date);
-            $("#start", $form).val(data.start);
-            $("#end", $form).val(data.end);
-            $("input[value=" + data.food + "]:radio").prop("checked", true);
-            if (data.food !== "mm") {
-                $(".appetite_cell").removeAttr("style");
-            }
-            $("#appetite").val(data.appetite);
-            $("#comment").val(data.comment);
-        }
-    }
-    function loadData () {
-        var $end = $("#end", $form);
-        !$end.val() && $end.val(getTime(new Date()));
-        return {
-            date: $("#date", $form).val(),
-            start: $("#start", $form).val(),
-            end: $("#end", $form).val(),
-            food: $("input[name=food]:radio:checked").val(),
-            appetite: $("#appetite").val() || 0,
-            comment: $("#comment").val()
-        };
-    }
-</script>

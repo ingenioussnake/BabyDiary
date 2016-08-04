@@ -64,43 +64,43 @@
             </div>
             <div class="bd">
                 <div class="weui_grids">
-                    <a class="weui_grid" href="./actions/action.html?type=dining">
+                    <a class="weui_grid" href="./action.html?type=dining">
                         <div class="weui_grid_icon">
                             <i class="icon icon_dining"></i>
                         </div>
                         <p class="weui_grid_label">吃饭</p>
                     </a>
-                    <a class="weui_grid" href="./actions/action.html?type=sleep">
+                    <a class="weui_grid" href="./action.html?type=sleep">
                         <div class="weui_grid_icon">
                             <i class="icon icon_sleep"></i>
                         </div>
                         <p class="weui_grid_label">睡觉</p>
                     </a>
-                    <a class="weui_grid" href="./actions/action.html?type=shit">
+                    <a class="weui_grid" href="./action.html?type=shit">
                         <div class="weui_grid_icon">
                             <i class="icon icon_shit"></i>
                         </div>
                         <p class="weui_grid_label">拉臭</p>
                     </a>
-                    <a class="weui_grid" href="./actions/action.html?type=height">
+                    <a class="weui_grid" href="./action.html?type=height">
                         <div class="weui_grid_icon">
                             <i class="icon icon_height"></i>
                         </div>
                         <p class="weui_grid_label">身高</p>
                     </a>
-                    <a class="weui_grid" href="./actions/action.html?type=weight">
+                    <a class="weui_grid" href="./action.html?type=weight">
                         <div class="weui_grid_icon">
                             <i class="icon icon_weight"></i>
                         </div>
                         <p class="weui_grid_label">体重</p>
                     </a>
-                    <a class="weui_grid" href="./actions/memo.html">
+                    <a class="weui_grid" href="./memo.html">
                         <div class="weui_grid_icon">
                             <i class="icon icon_memo"></i>
                         </div>
                         <p class="weui_grid_label">心情</p>
                     </a>
-                    <a class="weui_grid" href="./timeline/timeline.html">
+                    <a class="weui_grid" href="./timeline.html">
                         <div class="weui_grid_icon">
                             <i class="icon icon_timeline"></i>
                         </div>
@@ -113,7 +113,7 @@
                         </div>
                         <p class="weui_grid_label">统计</p>
                     </a>
-                    <a class="weui_grid" href="./profile/profile.html">
+                    <a class="weui_grid" href="./profile.html">
                         <div class="weui_grid_icon">
                             <i class="icon icon_profile"></i>
                         </div>
