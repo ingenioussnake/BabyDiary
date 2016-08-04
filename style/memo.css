@@ -1,0 +1,100 @@
+.panel .hd {
+    display: flex;
+    display: -webkit-flex;
+    padding: 0;
+    background-color: #3cc51f;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.panel .hd .page_title{
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+    text-align: center;
+    color: #fbf9fe;
+    font-size: 1.5rem;
+}
+.panel .hd a.icon_back {
+    background-image: url("../images/icons/icon_back.png");
+}
+.panel .hd a.icon_new {
+    background-image: url("../images/icons/icon_new.png");
+}
+li.memo_item .footer {
+    float: right;
+    height: 2rem;
+}
+a.icon {
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+li.memo_item .footer a.edit {
+    background-image: url("./images/icons/icon_edit.png");
+}
+li.memo_item .footer a.delete {
+    background-image: url("./images/icons/icon_delete.png");
+}
+li.memo_item .footer span.date {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+            
+ul#memo_list {
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    list-style-type: none;
+}
+
+ul#memo_list li.memo_item {
+    border-bottom: 1px solid #EBEBEB;
+}
+ul#memo_list div.memo_item_container {
+    display: -webkit-flex;
+    display: flex;
+    margin: 8px;
+}
+ul#memo_list div.memo {
+    white-space: pre-wrap;
+}
+ul#memo_list div.avatarContainer {
+    width: 64px;
+    height: 64px;
+    -webkit-flex-grow: 0;
+    flex-grow: 0;
+    -webkit-flex-shrink: 0;
+    flex-shrink: 0;
+}
+ul#memo_list img.avatar {
+    width: 100%;
+    height: 100%;
+}
+ul#memo_list div.memo_item_content {
+    margin-left: 8px;
+    -webkit-flex-grow: 1;
+    flex-grow: 1;
+}
+ul#memo_list div.title {
+    color: #606C8D;
+    font-size: larger;
+}
+ul#memo_list div.memo_container {
+    margin-top: 8px;
+    margin-bottom: 8px;
+    font-size: larger;
+}
+ul#memo_list img.imageContent {
+    max-height: 120px;
+    margin-right: 5px;
+}
+
+#preview {
+    max-height: 90%;
+    max-width: 90%;
+}

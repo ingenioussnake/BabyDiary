@@ -8,9 +8,7 @@ define(["jquery", "model/BaseItem", "util"], function($, BaseItem, Util){
     MemoItem.prototype.FORM_FRAGMENT = "./fragments/memo_fragment.html";
 
     MemoItem.prototype.TIMELINE_CONTENT = "<div><p><span class='memo'></span></p>"+
-                                    "<div class='weui_uploader_bd'>"+
-                                        "<ul class='weui_uploader_files'></ul>"+
-                                    "</div>"+
+                                    "<div class='image_container'></div>"+
                                   "</div>";
 
     MemoItem.prototype.FORM_TITLE = "宝宝爱你咯";
@@ -102,6 +100,19 @@ define(["jquery", "model/BaseItem", "util"], function($, BaseItem, Util){
         }
     };
 
+    MemoItem.prototype.createTimeLine = function ($item, $container) {
+        BaseItem.prototype.createTimeLine.apply(this, arguments);
+        $container.on("click", ".imageContent", function(e){
+            $('#preview').bPopup({
+                content:'image',
+                contentContainer:'#preview',
+                loadUrl: $(e.target).attr("src")
+            }, function(){
+                $("#preview img").css({"max-height": "100%", "max-width": "100%"});
+            });
+        });
+    };
+
     MemoItem.prototype.updateTimeline = function () {
         var $item = this.$item;
         var $thumb = $(".thumb", $item);
@@ -111,6 +122,14 @@ define(["jquery", "model/BaseItem", "util"], function($, BaseItem, Util){
         $(".content-inner h3", $item).html(this.title);
         $(".content-inner .memo", $item).html(this.memo);
         $(".thumb span", $item).html(Util.removeNumberTail(this.time));
+        $.get("./db/memo.php", {type: "pic_count", id: this.id}, function (data) {
+            var length = data.length, i = 0;
+            if (data instanceof Array && length > 0) {
+                for (;i<length;i++) {
+                    $("div.image_container", $item).append("<div class='image_content'><img class='imageContent' src='./db/memo.php?type=picture&id="+data[i]+"' /></div>");
+                }
+            }
+        }, "json");
     };
 
     return MemoItem;

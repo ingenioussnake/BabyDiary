@@ -6,60 +6,8 @@
     <title>宝宝的一天</title>
     <link rel="stylesheet" href="./style/weui.min.css"/>
     <link rel="stylesheet" href="./style/common.css"/>
+    <link rel="stylesheet" href="./style/timeline.css"/>
     <link rel="stylesheet" href="./style/timeline/style.css"/>
-    <style type="text/css">
-        .weui_cells {
-            margin-top: 0px;
-        }
-        .container .bd {
-            padding-bottom: 0;
-        }
-        .timeline_container {
-            background: #c2edf4 url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAFCAYAAACNbyblAAAAI0lEQVQIW2P8DwSMQMCABBhBgiA+sgRYBboEXBuyBIpZMAkAW1YUAh9deX8AAAAASUVORK5CYII=) repeat-x top left;
-        }
-        .timeline {
-            width: 100%;
-        }
-        p.item_tlb a {
-            width: 1.5rem;
-            height: 1.5rem;
-            display: inline-block;
-            margin-left: 0.5rem;
-            margin-right: 0.5rem;
-            background-size: contain;
-        }
-        p.item_tlb a.edit {
-            background-image: url("./images/icons/icon_edit.png");
-        }
-        p.item_tlb a.delete {
-            background-image: url("./images/icons/icon_delete.png");
-        }
-
-        .type_fm {
-            background-image: url(./images/timeline/fm.jpg);
-        }
-        .type_mm {
-            background-image: url(./images/timeline/mm.png);
-        }
-        .type_mx {
-            background-image: url(./images/timeline/mx.jpg);
-        }
-        .type_shit {
-            background-image: url(./images/timeline/shit.jpg);
-        }
-        .type_sleep {
-            background-image: url(./images/timeline/sleep.jpg);
-        }
-        .type_height {
-            background-image: url(./images/timeline/height.jpg);
-        }
-        .type_weight {
-            background-image: url(./images/timeline/weight.jpg);
-        }
-        .type_memo {
-            background-image: url(./images/timeline/memo.jpg);
-        }
-    </style>
     <script src="./js/libs/ModernizrTimeline.js"></script>
     <script type="text/javascript" src="./js/libs/require.js" data-main="./js/timeline" ></script>
     
@@ -89,6 +37,7 @@
                 </div>
             </div>
         </div>
+        <div id="preview" style="display: none;"></div>
         <div id="edit_dialog_container"></div>
         <div id="delete_dialog_container"></div>
         <div id="toast_container"></div>
