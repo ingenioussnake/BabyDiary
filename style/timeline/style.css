@@ -74,22 +74,6 @@
 	position: absolute;
 	bottom: -30px;
 }
-
-.type_fm {
-	background-image: url(../../images/fm.jpg);
-}
-
-.type_mm {
-	background-image: url(../../images/mm.jpg);
-}
-
-.type_shit {
-	background-image: url(../../images/shit.jpg);
-}
-
-.type_sleep {
-	background-image: url(../../images/sleep.jpg);
-}
 /* Transparent Checkbox/radio hack: leave the checkbox on top, hide it with opacity 0 */
 
 .event label,

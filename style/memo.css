@@ -35,10 +35,10 @@ a.icon {
     background-repeat: no-repeat;
 }
 li.memo_item .footer a.edit {
-    background-image: url("./images/icons/icon_edit.png");
+    background-image: url("../images/icons/icon_edit.png");
 }
 li.memo_item .footer a.delete {
-    background-image: url("./images/icons/icon_delete.png");
+    background-image: url("../images/icons/icon_delete.png");
 }
 li.memo_item .footer span.date {
     margin-top: auto;
