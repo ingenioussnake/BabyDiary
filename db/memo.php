@@ -124,6 +124,18 @@
         return json_encode($result);
     }
 
+    // function getMemoList ($offset, $size) {
+    //     global $dba;
+    //     $result = $dba->query("SELECT * FROM memo ORDER BY date DESC, time DESC LIMIT " . $offset . ", " . $size . ";", function($row){
+    //         global $dba;
+    //         $pics = $dba->query("SELECT id FROM picture WHERE memo = ". $row["id"] .";", function($pic){
+    //             return $pic["id"];
+    //         });
+    //         $row["pictures"] = $pics;
+    //     });
+    //     return json_encode($result);
+    // }
+
     function getBabyAvatar ($baby_id) {
         global $dba;
         $result = $dba->query("SELECT avatar from baby WHERE id = ". $baby_id . ";", function($row){

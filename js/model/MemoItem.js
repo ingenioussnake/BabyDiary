@@ -11,6 +11,27 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
                                     "<div class='image_container'></div>"+
                                   "</div>";
 
+    MemoItem.prototype.PIC_PREVIEW_CONTENT = "<a class='image_wrapper'><img class='image_content' /></a>";
+
+    MemoItem.prototype.LIST_ITEM_TMPL = '<li class="memo_item">' +
+                           '<div class="memo_item_container">' +
+                               '<div class="avatarContainer">' +
+                                   '<img class="avatar"></img>' +
+                               '</div>' + 
+                               '<div class="memo_item_content">' +
+                                   '<div class="title"></div>' +
+                                   '<div class="memo_container">'+
+                                        '<div class="memo"></div>'+
+                                        '<div class="image_container"></div>'+
+                                   '</div>' +
+                                   '<div class="footer">' +
+                                        '<a class="icon edit" href="javascript:;"></a>' +
+                                        '<a class="icon delete" href="javascript:;"></a>' +
+                                        '<span class="date"></span>' +
+                                   '</div>' + 
+                               '</div>' + 
+                       '</li>';
+
     MemoItem.prototype.FORM_TITLE = "宝宝爱你咯";
 
     MemoItem.prototype.AJAX_SETTINGS = {
@@ -125,7 +146,57 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
 
     MemoItem.prototype.createTimeLine = function ($item, $container) {
         BaseItem.prototype.createTimeLine.apply(this, arguments);
-        $(".image_container", $container).magnificPopup({
+        this.initPreviewPopup();
+        return this.$item;
+    };
+
+    MemoItem.prototype.updateTimeline = function () {
+        var $item = this.$item;
+        var $thumb = $(".thumb", $item);
+        if (!$thumb.hasClass("type_memo")) {
+            $thumb.addClass("type_memo");
+        }
+        $(".content-inner h3", $item).html(this.title);
+        $(".content-inner .memo", $item).html(this.memo);
+        $(".thumb span", $item).html(Util.removeNumberTail(this.time));
+        this.addPreview();
+    };
+
+    MemoItem.prototype.createListItem = function ($item) {
+        BaseItem.prototype.createListItem.apply(this, arguments);
+        this.initPreviewPopup();
+        return this.$item;
+    };
+
+    MemoItem.prototype.updateListItem = function () {
+        var $li = this.$item, that = this;
+        $li.attr("memo_id", this.id);
+        $("img.avatar", $li).attr("src", "./db/memo.php?type=avatar&baby="+this.baby);
+        $(".title", $li).text(this.title);      
+        $("div.memo", $li).text(this.memo);
+        $("div.footer span.date", $li).text(new Date(this.date).toLocaleDateString());
+        this.addPreview();
+    };
+
+    MemoItem.prototype.addPreview = function () {
+        var that = this, $container = $("div.image_container", that.$item);
+        $container.empty();
+        $.get("./db/memo.php", {type: "pic_count", id: that.id}, function(pictures){
+            var length = pictures.length, i = 0, src, $item;
+            if (pictures instanceof Array && length > 0) {
+                for (;i<length;i++) {
+                    src = "./db/memo.php?type=picture&id="+pictures[i];
+                    $item = $(that.PIC_PREVIEW_CONTENT);
+                    $item.attr("href", src);
+                    $("img", $item).attr("src", src);
+                    $container.append($item);
+                }
+            }
+        }, "json");
+    };
+
+    MemoItem.prototype.initPreviewPopup = function ($container) {
+        $(".image_container", this.$item).magnificPopup({
             delegate: 'a',
             type: 'image',
             mainClass: 'mfp-with-zoom mfp-img-mobile',
@@ -141,26 +212,6 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
                 duration: 200, // don't foget to change the duration also in CSS
             }
         });
-    };
-
-    MemoItem.prototype.updateTimeline = function () {
-        var $item = this.$item;
-        var $thumb = $(".thumb", $item);
-        if (!$thumb.hasClass("type_memo")) {
-            $thumb.addClass("type_memo");
-        }
-        $(".content-inner h3", $item).html(this.title);
-        $(".content-inner .memo", $item).html(this.memo);
-        $(".thumb span", $item).html(Util.removeNumberTail(this.time));
-        $.get("./db/memo.php", {type: "pic_count", id: this.id}, function (data) {
-            var length = data.length, i = 0, src;
-            if (data instanceof Array && length > 0) {
-                for (;i<length;i++) {
-                    src = "./db/memo.php?type=picture&id="+data[i];
-                    $("div.image_container", $item).append("<a class='image_content' href='"+src+"'><img class='imageContent' src='"+src+"' /></a>");
-                }
-            }
-        }, "json");
     };
 
     return MemoItem;

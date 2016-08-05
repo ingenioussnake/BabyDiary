@@ -192,11 +192,7 @@ function(DiningItem, SleepItem, ShitItem, HeightItem, WeightItem, MemoItem, $){
                         }
                     }
                 }, item.AJAX_SETTINGS);
-            if (data instanceof FormData) {
-                data.append("id", item.id);
-            } else {
-                data.id = item.id;
-            }
+            data.id = item.id;
             ajaxSettings.url = "./db/" + ajaxSettings.url + "?type=update&action=" + operatingItem.action;
             $.ajax(ajaxSettings);
         });
@@ -223,8 +219,7 @@ function(DiningItem, SleepItem, ShitItem, HeightItem, WeightItem, MemoItem, $){
     }
 
     function updateData (data) {
-        var newDate = data instanceof FormData ? data.get("date") : data.date;
-        if (newDate !== operatingItem.item.date) {
+        if (data.date !== operatingItem.item.date) {
             removeItem(operatingItem);
             return;
         }
