@@ -33,6 +33,10 @@
             echo uploadPicture();
             break;
 
+        case 'removePic':
+            echo removePicture($_POST["path"]);
+            break;
+
         case 'list':
             echo getMemoList($_GET["offset"], $_GET["size"]);
             break;
@@ -72,7 +76,7 @@
         global $dba;
         $length = count($pictures);
         for ($i = 0; $i < $length; $i++) {
-            $dba->exec("INSERT INTO picture VALUES (NULL, ". $memo_id . ", '', '" . $pictures[$i] . "');");
+            $dba->exec("INSERT INTO picture VALUES (NULL, ". $memo_id . ", '" . $pictures[$i] . "');");
         }
     }
 
@@ -81,14 +85,20 @@
         $picture = $_FILES["picture"];
         $file = $picture["tmp_name"];
         if (is_uploaded_file($file) && $picture["size"] < MAX_PIC_SIZE && in_array($picture["type"], $imageType)) {
-            $path = $dir.time()."_".$picture["name"];
-            if (!move_uploaded_file($file, $root.$path)) {
-                echo "move failed";
-            }
-            echo $path;
+            $path = $dir.time()."_".$picture["size"].".".pathinfo($picture["name"])["extension"];
+            echo move_uploaded_file($file, $root.$path) ? $path : "move failed!";
         } else {
             echo false;
         }
+    }
+
+    function removePicture ($path) {
+        global $dba, $root;
+        $file = $root.$path;
+        if (is_file($file)) {
+            unlink($file);
+        }
+        return $dba->exec("DELETE FROM picture WHERE location = '". $path . "';");
     }
 
     function updateMemo () {

@@ -52,10 +52,19 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
             }
         });
         $(".weui_uploader_files", $form).on("click", "a.delete", function(e){
-            $img = $(e.target).parent();
-            var index = $img.index();
-            that._pic_list.splice(index, 1);
-            $img.remove();
+            var $img = $(e.target).parent(),
+                index = $("li[preview=true]", $preview).index($img);
+            $.ajax({
+                url: "./db/memo.php?type=removePic",
+                type: "POST",
+                data: {path: that._pic_list[index]},
+                success: function(respond){
+                    if (!!respond) {
+                        that._pic_list.splice(index, 1);
+                        $img.remove();
+                    }
+                }
+            });
         });
     };
 
@@ -65,7 +74,7 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
             fieldName: "picture",
             quality: file.size < MemoItem.PICTURE_MAX_SIZE ? 1 : 0.8
         }).then(function(rst){
-            var $img = $("<li><a class='delete' href='javascript:;'></a></li>");
+            var $img = $("<li preview='true'><a class='delete' href='javascript:;'></a></li>");
             $img.addClass("weui_uploader_file");
             $img.css("background-image", "url("+rst.base64+")");
             $preview.append($img);
