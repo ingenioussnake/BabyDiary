@@ -162,6 +162,10 @@
         if(!file_exists($root.$dir)) {
             mkdir($root.$dir);
         }
+        if (!is_writable($root.$dir)) {
+            echo "Not writable";
+            exit;
+        }
         return $dir;
     }
 ?>
