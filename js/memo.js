@@ -1,7 +1,7 @@
 require.config({
     "paths": {
-        "jquery": "./libs/jquery-1.8.0.min",
-        "jquery.popup": "./libs/jquery.bpopup.min",
+        "jquery": "./libs/jquery-3.0.1.min",
+        "jquery.popup": "./libs/jquery.magnific-popup.min",
         "lrz": "./libs/lrz/lrz.bundle"
     },
     "shim": {
@@ -31,8 +31,12 @@ function(MemoItem, $){
                                    '</div>' + 
                                '</div>' + 
                        '</li>';
+
+    var MEMO_PREVIEW_ITEM = "<a><img class='imageContent' /></a>";
     var offset = 0, list = [], operatingItem;
     getMemos();
+
+    
     
     function getMemos () {
         $.get("./db/memo.php", {offset: offset, size: ACTIVE_COUNT, type: "list"}, function(data){
@@ -64,11 +68,31 @@ function(MemoItem, $){
         $(".title", $li).text(item.title);      
         $("div.memo", $li).text(item.memo);
         updatePicture && $.get("./db/memo.php", {type: "pic_count", id: item.id}, function (data) {
-            var length = data.length, i = 0;
+            var length = data.length, i = 0, src, $item;
             if (data instanceof Array && length > 0) {
                 for (;i<length;i++) {
-                    $("div.image_container", $li).append("<img class='imageContent' src='./db/memo.php?type=picture&id="+data[i]+"' />");
+                    src = "./db/memo.php?type=picture&id="+data[i];
+                    $item = $(MEMO_PREVIEW_ITEM);
+                    $item.attr("href", src);
+                    $("img", $item).attr("src", src);
+                    $("div.image_container", $li).append($item);
                 }
+                $(".memo_container .image_container", $li).magnificPopup({
+                    delegate: 'a',
+                    type: 'image',
+                    mainClass: 'mfp-with-zoom mfp-img-mobile',
+                    image: {
+                        verticalFit: true
+                    },
+                    gallery: {
+                        enabled: true,
+                        navigateByImgClick: false
+                    },
+                    zoom: {
+                        enabled: true,
+                        duration: 200, // don't foget to change the duration also in CSS
+                    }
+                });
             }
         }, "json");
         $("div.footer span.date", $li).text(new Date(item.date).toLocaleDateString());
@@ -82,15 +106,6 @@ function(MemoItem, $){
             showEditDialog(operatingItem);
         } else if ($target.hasClass("delete")) {
             showDeleteDialog();
-        } else if ($target.hasClass("imageContent")) {
-            e.preventDefault();
-            $('#preview').bPopup({
-                content:'image',
-                contentContainer:'#preview',
-                loadUrl: $target.attr("src")
-            }, function(){
-                $("#preview img").css({"max-height": "100%", "max-width": "100%"});
-            });
         }
     });
 

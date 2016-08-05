@@ -1,7 +1,7 @@
 require.config({
     "paths": {
-        "jquery": "./libs/jquery-1.8.0.min",
-        "jquery.popup": "./libs/jquery.bpopup.min",
+        "jquery": "./libs/jquery-3.0.1.min",
+        "jquery.popup": "./libs/jquery.magnific-popup.min",
         "lrz": "./libs/lrz/lrz.bundle"
     },
     "shim": {

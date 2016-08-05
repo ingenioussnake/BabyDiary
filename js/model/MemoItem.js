@@ -125,14 +125,21 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
 
     MemoItem.prototype.createTimeLine = function ($item, $container) {
         BaseItem.prototype.createTimeLine.apply(this, arguments);
-        $container.on("click", ".imageContent", function(e){
-            $('#preview').bPopup({
-                content:'image',
-                contentContainer:'#preview',
-                loadUrl: $(e.target).attr("src")
-            }, function(){
-                $("#preview img").css({"max-height": "100%", "max-width": "100%"});
-            });
+        $(".image_container", $container).magnificPopup({
+            delegate: 'a',
+            type: 'image',
+            mainClass: 'mfp-with-zoom mfp-img-mobile',
+            image: {
+                verticalFit: true
+            },
+            gallery: {
+                enabled: true,
+                navigateByImgClick: false
+            },
+            zoom: {
+                enabled: true,
+                duration: 200, // don't foget to change the duration also in CSS
+            }
         });
     };
 
@@ -146,10 +153,11 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
         $(".content-inner .memo", $item).html(this.memo);
         $(".thumb span", $item).html(Util.removeNumberTail(this.time));
         $.get("./db/memo.php", {type: "pic_count", id: this.id}, function (data) {
-            var length = data.length, i = 0;
+            var length = data.length, i = 0, src;
             if (data instanceof Array && length > 0) {
                 for (;i<length;i++) {
-                    $("div.image_container", $item).append("<div class='image_content'><img class='imageContent' src='./db/memo.php?type=picture&id="+data[i]+"' /></div>");
+                    src = "./db/memo.php?type=picture&id="+data[i];
+                    $("div.image_container", $item).append("<a class='image_content' href='"+src+"'><img class='imageContent' src='"+src+"' /></a>");
                 }
             }
         }, "json");
