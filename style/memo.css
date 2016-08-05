@@ -82,12 +82,10 @@ ul#memo_list div.memo_item_content {
 }
 ul#memo_list div.title {
     color: #606C8D;
-    font-size: larger;
 }
 ul#memo_list div.memo_container {
     margin-top: 8px;
     margin-bottom: 8px;
-    font-size: larger;
 }
 ul#memo_list img.imageContent {
     max-height: 120px;

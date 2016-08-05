@@ -1,5 +1,6 @@
 <?php
     include './dba.php';
+    include '../config.php';
     $type = isset($_GET["type"]) ? $_GET["type"] : "insert";
     $imageType = array(
         'image/jpg',
@@ -10,7 +11,9 @@
         'image/bmp',
         'image/x-png'
     );
-    define("MAX_PIC_SIZE", 5300000);
+    define("MAX_PIC_SIZE", 3000000);
+    $root = get_config("../php.ini")["picture_location"];
+    $dir = prepareDestination($root, 1, date("Y-m-d"));
     $dba = new DBA();
     $dba->connect();
     switch ($type) {
@@ -24,6 +27,10 @@
 
         case 'insert':
             echo insertMemo();
+            break;
+
+        case 'upload':
+            echo uploadPicture();
             break;
 
         case 'list':
@@ -47,8 +54,8 @@
     function insertMemo () {
         global $dba;
         $id = _insertMemo();
-        if (isset($_FILES["picture"])) {
-            $pictures = $_FILES["picture"];
+        if (isset($_POST["pictures"])) {
+            $pictures = $_POST["pictures"];
             insertPictures($id, $pictures);
         }
         return 1;
@@ -61,18 +68,26 @@
         return $dba->insert_id();
     }
 
-    function insertPictures ($id, $pictures) {
-        global $dba, $imageType;
-        $names = $pictures["name"];
-        $size = $pictures["size"];
-        $tmp = $pictures["tmp_name"];
-        $type = $pictures["type"];
-        $length = count($names);
+    function insertPictures ($memo_id, $pictures) {
+        global $dba;
+        $length = count($pictures);
         for ($i = 0; $i < $length; $i++) {
-            if (is_uploaded_file($tmp[$i]) && $size[$i] < MAX_PIC_SIZE && in_array($type[$i], $imageType)) {
-                $pic = addslashes(fread(fopen($tmp[$i], 'rb'), filesize($tmp[$i])));
-                $dba->exec("INSERT INTO picture VALUES (NULL, ". $id . ", '" . $pic . "')");
+            $dba->exec("INSERT INTO picture VALUES (NULL, ". $memo_id . ", '', '" . $pictures[$i] . "');");
+        }
+    }
+
+    function uploadPicture () {
+        global $dba, $imageType, $root, $dir;
+        $picture = $_FILES["picture"];
+        $file = $picture["tmp_name"];
+        if (is_uploaded_file($file) && $picture["size"] < MAX_PIC_SIZE && in_array($picture["type"], $imageType)) {
+            $path = $dir.time()."_".$picture["name"];
+            if (!move_uploaded_file($file, $root.$path)) {
+                echo "move failed";
             }
+            echo $path;
+        } else {
+            echo false;
         }
     }
 
@@ -116,11 +131,27 @@
     }
 
     function getPicture ($pic_id) {
-        global $dba;
-        $result = $dba->query("SELECT picture from picture WHERE id = ". $pic_id . ";", function($row){
-            return $row["picture"];
+        global $dba, $root;
+        $result = $dba->query("SELECT location from picture WHERE id = ". $pic_id . ";", function($row){
+            return $row["location"];
         });
         header("Content-Type:image/*");
-        return $result[0];
+        $file = $result[0];
+        return file_get_contents($root.$file);
+    }
+
+    function prepareDestination ($root, $baby_id, $date) {
+        if(!file_exists($root)) {
+            mkdir($root);
+        }
+        $dir = $baby_id."/";
+        if(!file_exists($root.$dir)) {
+            mkdir($root.$dir);
+        }
+        $dir .= $date."/";
+        if(!file_exists($root.$dir)) {
+            mkdir($root.$dir);
+        }
+        return $dir;
     }
 ?>

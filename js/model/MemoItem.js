@@ -1,4 +1,4 @@
-define(["jquery", "model/BaseItem", "util"], function($, BaseItem, Util){
+define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, Util){
     var MemoItem = function () {
         BaseItem.apply(this, arguments);
         this._pic_list = [];
@@ -14,10 +14,10 @@ define(["jquery", "model/BaseItem", "util"], function($, BaseItem, Util){
     MemoItem.prototype.FORM_TITLE = "宝宝爱你咯";
 
     MemoItem.prototype.AJAX_SETTINGS = {
-        url: "memo.php",
-        contentType: false, // 告诉jQuery不要去处理发送的数据
-        processData: false  // 告诉jQuery不要去设置Content-Type请求头
+        url: "memo.php"
     };
+
+    MemoItem.PICTURE_MAX_SIZE = 1.5 * 1024 * 1024;
 
     MemoItem.prototype.getData = function () {
         return {
@@ -30,19 +30,11 @@ define(["jquery", "model/BaseItem", "util"], function($, BaseItem, Util){
     };
 
     MemoItem.prototype.updateData = function (data) {
-        if (data instanceof FormData) {
-            this.id = data.get("id");
-            this.date = data.get("date");
-            this.time = data.get("time");
-            this.title = data.get("title");
-            this.memo = data.get("memo");
-        } else {
-            this.id = data.id;
-            this.date = data.date;
-            this.time = data.time;
-            this.title = data.title;
-            this.memo = data.memo;
-        }
+        this.id = data.id;
+        this.date = data.date;
+        this.time = data.time;
+        this.title = data.title;
+        this.memo = data.memo;
     };
 
     MemoItem.prototype.onFormLoaded = function () {
@@ -53,15 +45,10 @@ define(["jquery", "model/BaseItem", "util"], function($, BaseItem, Util){
         this._pic_list = [];
         $("#pics", $form).on("change", function(e){
             for (var i = 0; i < this.files.length; i++) {
-                oFileReader = new FileReader();
-                oFileReader.onload = function (e) {
-                    $img = $("<li><a class='delete' href='javascript:;'></a></li>");
-                    $img.addClass("weui_uploader_file");
-                    $img.css("background-image", "url("+e.target.result+")");
-                    $preview.append($img);
-                };
-                oFileReader.readAsDataURL(this.files[i]);
-                that._pic_list.push(this.files[i]);
+                preview_upload(this.files[i], $preview, function(path){
+                    that._pic_list.push(path);
+                    console.log(that._pic_list);
+                });
             }
         });
         $(".weui_uploader_files", $form).on("click", "a.delete", function(e){
@@ -72,17 +59,44 @@ define(["jquery", "model/BaseItem", "util"], function($, BaseItem, Util){
         });
     };
 
-    MemoItem.prototype.getFormData = function () {
-        var $form = $(".action_form"),
-            data = new FormData();
-        data.append("date", $("#date", $form).val());
-        data.append("time", $("#time", $form).val());
-        data.append("title", $("#title", $form).val());
-        data.append("memo", $("#memo", $form).val());
-        this._pic_list.forEach(function(file){
-            data.append("picture[]", file);
+    function preview_upload (file, $preview, cb) {
+        lrz(file, {
+            width: 800,
+            fieldName: "picture",
+            quality: file.size < MemoItem.PICTURE_MAX_SIZE ? 1 : 0.8
+        }).then(function(rst){
+            var $img = $("<li><a class='delete' href='javascript:;'></a></li>");
+            $img.addClass("weui_uploader_file");
+            $img.css("background-image", "url("+rst.base64+")");
+            $preview.append($img);
+            return rst;
+        }).then(function(rst){
+            var oFormData = rst.formData;
+            oFormData.append("length", rst.fileLen);
+            $.ajax({
+                url: "./db/memo.php?type=upload",
+                type: "POST",
+                data: oFormData,
+                contentType: false, // 告诉jQuery不要去处理发送的数据
+                processData: false,  // 告诉jQuery不要去设置Content-Type请求头
+                success: function (respond, status) {
+                    if (status === "success") {
+                        cb(respond);
+                    }
+                }
+            });
         });
-        return data;
+    }
+
+    MemoItem.prototype.getFormData = function () {
+        var $form = $(".action_form");
+        return {
+            "date": $("#date", $form).val(),
+            "time": $("#time", $form).val(),
+            "title": $("#title", $form).val(),
+            "memo": $("#memo", $form).val(),
+            "pictures": this._pic_list
+        };
     };
 
     MemoItem.prototype.setFormData = function (data) {

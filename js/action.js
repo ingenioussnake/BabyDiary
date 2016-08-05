@@ -1,6 +1,7 @@
 require.config({
     "paths": {
-        "jquery": "libs/jquery-3.0.1.min"
+        "jquery": "libs/jquery-3.0.1.min",
+        "lrz": "libs/lrz/lrz.bundle"
     }
 });
 
