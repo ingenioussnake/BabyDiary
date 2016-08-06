@@ -34,7 +34,7 @@
             break;
 
         case 'removePic':
-            echo removePicture($_POST["path"]);
+            echo removePicture();
             break;
 
         case 'list':
@@ -86,7 +86,14 @@
         $file = $picture["tmp_name"];
         if (is_uploaded_file($file) && $picture["size"] < MAX_PIC_SIZE && in_array($picture["type"], $imageType)) {
             $path = $dir.time()."_".$picture["size"].".".pathinfo($picture["name"])["extension"];
-            echo move_uploaded_file($file, $root.$path) ? $path : "move failed!";
+            if (move_uploaded_file($file, $root.$path)) {
+                if (isset($_POST["memo_id"])) {
+                    $dba->exec("INSERT INTO picture VALUES (NULL, ". $_POST["memo_id"] . ", '" . $path . "');");
+                }
+                echo $path;
+            } else {
+                echo "move failed!";
+            }
         } else {
             echo false;
         }
@@ -94,6 +101,14 @@
 
     function removePicture ($path) {
         global $dba, $root;
+        $path = "";
+        if (isset($_POST["path"])) {
+            $path = $_POST["path"];
+        } else {
+            $path = $dba->query("SELECT location from picture WHERE id = ". $_POST["id"] . ";", function($row){
+                return $row["location"];
+            })[0];
+        }
         $file = $root.$path;
         if (is_file($file)) {
             unlink($file);
@@ -105,7 +120,7 @@
         global $dba;
         $set = "";
         foreach ($_POST as $key => $value) {
-            if ($key != "id") {
+            if ($key != "id" && $key != "pictures") {
                 $set .= $key . " = '" . $value . "', ";
             }
         }
@@ -118,23 +133,24 @@
         return $dba->exec("DELETE FROM memo WHERE id = ". $_POST["id"]);
     }
 
-    function getMemoList ($offset, $size) {
-        global $dba;
-        $result = $dba->query("SELECT * FROM memo ORDER BY date DESC, time DESC LIMIT " . $offset . ", " . $size . ";");
-        return json_encode($result);
-    }
-
     // function getMemoList ($offset, $size) {
     //     global $dba;
-    //     $result = $dba->query("SELECT * FROM memo ORDER BY date DESC, time DESC LIMIT " . $offset . ", " . $size . ";", function($row){
-    //         global $dba;
-    //         $pics = $dba->query("SELECT id FROM picture WHERE memo = ". $row["id"] .";", function($pic){
-    //             return $pic["id"];
-    //         });
-    //         $row["pictures"] = $pics;
-    //     });
+    //     $result = $dba->query("SELECT * FROM memo ORDER BY date DESC, time DESC LIMIT " . $offset . ", " . $size . ";");
     //     return json_encode($result);
     // }
+
+    function getMemoList ($offset, $size) {
+        global $dba;
+        $result = $dba->query("SELECT * FROM memo ORDER BY date DESC, time DESC LIMIT " . $offset . ", " . $size . ";", function($row){
+            global $dba;
+            $pics = $dba->query("SELECT id FROM picture WHERE memo = ". $row["id"] .";", function($pic){
+                return $pic["id"];
+            });
+            $row["pictures"] = $pics;
+            return $row;
+        });
+        return json_encode($result);
+    }
 
     function getBabyAvatar ($baby_id) {
         global $dba;

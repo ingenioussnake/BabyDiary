@@ -46,7 +46,8 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
             date: this.date,
             time: this.time,
             title: this.title,
-            memo: this.memo
+            memo: this.memo,
+            pictures: this.pictures
         };
     };
 
@@ -56,6 +57,7 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
         this.time = data.time;
         this.title = data.title;
         this.memo = data.memo;
+        this.pictures = data.pictures;
     };
 
     MemoItem.prototype.onFormLoaded = function () {
@@ -66,22 +68,27 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
         this._pic_list = [];
         $("#pics", $form).on("change", function(e){
             for (var i = 0; i < this.files.length; i++) {
-                preview_upload(this.files[i], $preview, function(path){
+                that.preview_upload(this.files[i], $preview, function(path){
                     that._pic_list.push(path);
                     console.log(that._pic_list);
                 });
             }
         });
         $(".weui_uploader_files", $form).on("click", "a.delete", function(e){
-            var $img = $(e.target).parent(),
+            var $img = $(e.target).parent(), data, index;
+            if (!!$img.attr("pic_id")) {
+                data = {id: $img.attr("pic_id")};
+            } else {
                 index = $("li[preview=true]", $preview).index($img);
+                data = {path: that._pic_list[index]};
+            }
             $.ajax({
                 url: "./db/memo.php?type=removePic",
                 type: "POST",
-                data: {path: that._pic_list[index]},
+                data: data,
                 success: function(respond){
                     if (!!respond) {
-                        that._pic_list.splice(index, 1);
+                        index !== undefined && that._pic_list.splice(index, 1);
                         $img.remove();
                     }
                 }
@@ -89,7 +96,8 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
         });
     };
 
-    function preview_upload (file, $preview, cb) {
+    MemoItem.prototype.preview_upload = function (file, $preview, cb) {
+        var that = this;
         lrz(file, {
             width: 800,
             fieldName: "picture",
@@ -103,6 +111,9 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
         }).then(function(rst){
             var oFormData = rst.formData;
             oFormData.append("length", rst.fileLen);
+            if (that.id) {
+                oFormData.append("memo_id", that.id);
+            }
             $.ajax({
                 url: "./db/memo.php?type=upload",
                 type: "POST",
@@ -140,7 +151,14 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
             $("#time", $form).val(data.time);
             $("#title").val(data.title);
             $("#memo").val(data.memo);
-            $(".picture_cell").hide();
+            var i, $img, pictures = data.pictures; 
+            for (i = 0; i < pictures.length; i++) {
+                $img = $("<li pic_id="+pictures[i]+"><a class='delete' href='javascript:;'></a></li>");
+                $img.addClass("weui_uploader_file");
+                $img.css("background-image", "url(./db/memo.php?type=picture&id="+pictures[i]+")");
+                $(".action_form .weui_uploader_files").append($img);
+            }
+            // $(".picture_cell").hide();
         }
     };
 
@@ -195,7 +213,7 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
         }, "json");
     };
 
-    MemoItem.prototype.initPreviewPopup = function ($container) {
+    MemoItem.prototype.initPreviewPopup = function () {
         $(".image_container", this.$item).magnificPopup({
             delegate: 'a',
             type: 'image',

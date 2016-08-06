@@ -99,7 +99,7 @@ function(DiningItem, SleepItem, ShitItem, HeightItem, WeightItem, MemoItem, $){
     function getList () {
         var date = $("#date_slt").val();
         $.get("./db/timeline.php", {type: "list", date: date}, function(data){
-            $(".timeline").empty();
+            $(".timeline").empty();console.log(data);
             if (data.length > 0) {
                 data.sort(function(a, b){
                     // for ios

@@ -29,7 +29,7 @@
     }
 
     function getList ($date) {
-        $actions = array("sleep", "shit", "height", "weight", "memo");
+        $actions = array("sleep", "shit", "height", "weight");
         $results = array();
         global $dba;
         foreach ($actions as $action) {
@@ -38,14 +38,27 @@
             });
             $results = array_merge($results, $result);
         }
-        $results = array_merge($results, getDiningList($date));
+        $results = array_merge($results, getDiningByDate($date), getMemoByDate($date));
         return json_encode($results);
     }
 
-    function getDiningList ($date) {
+    function getDiningByDate ($date) {
         global $dba;
         return $dba->query("select dining.id, dining.date, dining.start, dining.end, dining.appetite, dining.comment, food.name as food from dining inner join food on dining.food = food.id WHERE dining.baby = 1 AND dining.date = '" . $date. "' order by dining.start desc;", function($row) {
             return array("action"=>"dining", "item"=>$row);
         });
+    }
+
+    function getMemoByDate ($date) {
+        global $dba;
+        $result = $dba->query("SELECT * FROM memo WHERE baby = 1 AND date = '". $date. "';", function($row){
+            global $dba;
+            $pics = $dba->query("SELECT id FROM picture WHERE memo = ". $row["id"] .";", function($pic){
+                return $pic["id"];
+            });
+            $row["pictures"] = $pics;
+            return array("action"=>"memo", "item"=>$row);
+        });
+        return $result;
     }
 ?>
