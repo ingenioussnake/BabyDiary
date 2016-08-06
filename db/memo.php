@@ -99,7 +99,7 @@
         }
     }
 
-    function removePicture ($path) {
+    function removePicture () {
         global $dba, $root;
         $path = "";
         if (isset($_POST["path"])) {
@@ -130,6 +130,14 @@
 
     function removeMemo () {
         global $dba;
+        $dba->query("SELECT location FROM picture WHERE memo = ". $_POST["id"]. ";", function($row){
+            global $root;
+            $file = $root.$row["location"];
+            if (is_file($file)) {
+                unlink($file);
+            }
+        });
+        $dba->exec("DELETE FROM picture WHERE memo = ". $_POST["id"]);
         return $dba->exec("DELETE FROM memo WHERE id = ". $_POST["id"]);
     }
 
