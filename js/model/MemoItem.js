@@ -197,20 +197,17 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
     };
 
     MemoItem.prototype.addPreview = function () {
-        var that = this, $container = $("div.image_container", that.$item);
-        $container.empty();
-        $.get("./db/memo.php", {type: "pic_count", id: that.id}, function(pictures){
+        var pictures = this.pictures, $container = $("div.image_container", this.$item);
+        if (pictures instanceof Array) {
             var length = pictures.length, i = 0, src, $item;
-            if (pictures instanceof Array && length > 0) {
-                for (;i<length;i++) {
-                    src = "./db/memo.php?type=picture&id="+pictures[i];
-                    $item = $(that.PIC_PREVIEW_CONTENT);
-                    $item.attr("href", src);
-                    $("img", $item).attr("src", src);
-                    $container.append($item);
-                }
+            for (;i<length;i++) {
+                src = "./db/memo.php?type=picture&id="+pictures[i];
+                $item = $(this.PIC_PREVIEW_CONTENT);
+                $item.attr("href", src);
+                $("img", $item).attr("src", src);
+                $container.append($item);
             }
-        }, "json");
+        }
     };
 
     MemoItem.prototype.initPreviewPopup = function () {
