@@ -1,0 +1,74 @@
+<div class="chart_container">
+    <canvas id="food_chart"></canvas>
+</div>
+<style>
+    canvas {
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
+    }
+</style>
+<script type="text/javascript">
+    $.get("./db/statistic.php?type=appetite", function(data){
+        console.log(data)
+        showChart(data, "food_chart", false);
+    }, "json");
+
+    function showChart (data, id, reverse) { // no reverse, no label
+        console.log(data);
+        var ctx = document.getElementById(id).getContext("2d");
+        var origin = data;
+        data = {
+            labels: $.map(origin, function(item){
+                    return item.date;
+                }),
+            datasets: [{
+                label: "mm",
+                data: $.map(origin, function(item){
+                    return parseInt(item.duration || item.appetite);
+                })
+            }]
+        };
+        console.log(data);
+        new Chart(ctx, {
+            type: 'horizontalBar',
+            data: data, 
+            options: {
+                responsive: true,
+                hoverAnimationDuration: 400,
+                stacked: false,
+                // legend: {
+                //     display: !reverse
+                // },
+                title:{
+                    // display:!reverse,
+                    text:"Chart.js Bar Chart - Multi Axis"
+                },
+                scales: {
+                    xAxes: [{
+                        type: "linear",
+                        display: true,
+                        ticks: {
+                            // reverse: reverse
+                        },
+                        // position: "left"
+                    }],
+                    yAxes: [{
+                        type: "time",
+                        // display: !reverse,
+                        stacked: false,
+                        time: {
+                            unit: "day",
+                            max: new Date()
+                        },
+                        scaleLabel: {
+                            display: true
+                        },
+                        position: "left",
+                        categoryPercentage: 1
+                    }]
+                }
+            }
+        });
+    }
+</script>

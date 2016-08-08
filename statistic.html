@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+<title>心情记录</title>
+<link rel="stylesheet" href="./style/weui.min.css"/>
+<link rel="stylesheet" href="./style/common.css"/>
+<script type="text/javascript" src="./js/libs/require.js" data-main="./js/statistic" ></script>
+</head>
+<body>
+    <div class="container" id="container">
+        <div class="tabbar">
+            <div class="weui_tab">
+                <div class="weui_tab_bd">
+
+                </div>
+                <div class="weui_tabbar">
+                    <a href="javascript:;" class="weui_tabbar_item weui_bar_item_on" id = "stature">
+                        <div class="weui_tabbar_icon">
+                            <img src="./images/icon_nav_button.png" alt="">
+                        </div>
+                        <p class="weui_tabbar_label">身材</p>
+                    </a>
+                    <a href="javascript:;" class="weui_tabbar_item" id = "appetite">
+                        <div class="weui_tabbar_icon">
+                            <img src="./images/icon_nav_msg.png" alt="">
+                        </div>
+                        <p class="weui_tabbar_label">饭量</p>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="toast_container"></div>
+    <div id="edit_dialog_container"></div>
+    <div id="delete_dialog_container"></div>
+</body>
+</html>
