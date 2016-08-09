@@ -8,17 +8,13 @@
     </div>
     <div class="charts">
         <div class="chart_container">
-            <canvas id="mm_chart"></canvas>
-        </div>
-        <div class="chart_container">
-            <canvas id="fm_chart"></canvas>
+            <canvas id="chart"></canvas>
         </div>
     </div>
 </div>
 <script type="text/javascript">
     $(".unit_control").Segment();
-    var fm_chart = createChart("fm_chart", "配方(勺)", true);
-    var mm_chart = createChart("mm_chart", "母乳(分钟)", false);
+    var chart = createChart("chart");
     $(".ui-segment span.option").on("click", function(a){
         getData($(this).attr("value"));
     });
@@ -34,15 +30,13 @@
                     label = (label.getMonth() + 1) + "-" + label.getDate();
                 }
                 labels[index] = label;
-                fmData[index] = parseInt(value.appetite) || 0;
+                fmData[index] = -10 * (parseInt(value.appetite) || 0);
                 mmData[index] = parseInt(value.duration) || 0;
             });
-            fm_chart.data.labels = labels;
-            mm_chart.data.labels = labels;
-            fm_chart.data.datasets[0].data = fmData;
-            mm_chart.data.datasets[0].data = mmData;
-            fm_chart.update();
-            mm_chart.update();
+            chart.data.labels = labels;
+            chart.data.datasets[0].data = fmData;
+            chart.data.datasets[1].data = mmData;
+            chart.update();
         }, "json");
     }
 
@@ -52,11 +46,14 @@
             labels: [],
             datasets: [{
                 data: [],
-                backgroundColor: reverse ? "#F7464A" : "#46BFBD"
+                backgroundColor: "#F7464A"
+            },{
+                data: [],
+                backgroundColor: "#46BFBD"
             }]
         };
         return new Chart(ctx, {
-            type: 'bar',
+            type: 'horizontalBar',
             data: data, 
             options: {
                 responsive: true,
@@ -65,26 +62,37 @@
                 legend: {
                     display: false
                 },
+                tooltips: {
+                    callbacks: {
+                        title: function (items, data) {
+                            var yLabel = items[0].yLabel.split("-");
+                            return yLabel[0] + "月" + yLabel[1] + "日";
+                        },
+                        label: function (item, data) {
+                            var xLabel = item.xLabel;
+                            return (!isNaN(xLabel) && xLabel < 10) ? ("配方" + (xLabel / -10) + "勺") : ("母乳" +  xLabel + "分钟");
+                        }
+                    }
+                },
                 scales: {
-                    yAxes: [{
+                    xAxes: [{
                         type: "linear",
                         display: true,
                         ticks: {
-                            reverse: reverse,
-                            min: 0
+                            display: true,
+                            callback: function (value, index, values) {
+                                return (!isNaN(value) && value < 0) ? value / -10 : value;
+                            }
                         },
-                        beginAtZero: true,
+                        stacked: true,
                         scaleLabel: {
                             display: true,
-                            labelString: scaleLabel
+                            labelString: "配方(勺) vs 母乳(分钟)"
                         }
                     }],
-                    xAxes: [{
+                    yAxes: [{
                         type: "category",
-                        ticks: {
-                            display: !reverse
-                        },
-                        position: reverse ? "top": "bottom",
+                        stacked: true,
                         categoryPercentage: 1
                     }]
                 }
