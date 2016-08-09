@@ -34,6 +34,7 @@
                 mmData[index] = parseInt(value.duration) || 0;
             });
             chart.data.labels = labels;
+            chart.data.datasets[0].label = unit;
             chart.data.datasets[0].data = fmData;
             chart.data.datasets[1].data = mmData;
             chart.update();
@@ -65,8 +66,16 @@
                 tooltips: {
                     callbacks: {
                         title: function (items, data) {
-                            var yLabel = items[0].yLabel.split("-");
-                            return yLabel[0] + "月" + yLabel[1] + "日";
+                            var unit = data.datasets[0].label;
+                            var yLabel = items[0].yLabel;
+                            if (unit === "day") {
+                                yLabel = yLabel.split("-");
+                                return yLabel[0] + "月" + yLabel[1] + "日";
+                            } else if (unit === "week") {
+                                return "第" + yLabel + "周";
+                            } else {
+                                return yLabel + "月";
+                            }
                         },
                         label: function (item, data) {
                             var xLabel = item.xLabel;
