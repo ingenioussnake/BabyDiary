@@ -30,9 +30,23 @@
 .statistic_container .hd a.icon_new {
     background-image: url("../images/icons/icon_new.png");
 }
+.statistic_container .navbar {
+    height: 100%;
+    padding-bottom: 3rem;
+    box-sizing: border-box;
+}
+.appetite_quality {
+    height: 100%;
+}
+.appetite_quality .charts {
+    height: 100%;
+    padding-bottom: 34px;
+    box-sizing: border-box;
+}
 .appetite_quality .chart_container {
     margin-right: 10px;
     margin-left: 10px;
+    height: 100%;
 }
 .appetite_quality .chart_container canvas {
     -moz-user-select: none;
