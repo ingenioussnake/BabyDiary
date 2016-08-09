@@ -1,70 +1,92 @@
-<div class="chart_container">
-    <canvas id="food_chart"></canvas>
+<div class="appetite">
+    <div class="hd">
+        <a class="icon icon_back" href="./index.php"></a>
+        <h1 class="page_title">宝宝好能吃</h1>
+        <a class="icon icon_new" href="./action.html?type=dining"></a>
+    </div>
+    <div class="unit_header">
+        <select class="unit_control">
+          <option value="day">日</option>
+          <option value="week">周</option>
+          <option value="month">月</option>
+        </select>
+    </div>
+    <div class="charts">
+        <div class="chart_container">
+            <canvas id="mm_chart"></canvas>
+        </div>
+        <div class="chart_container">
+            <canvas id="fm_chart"></canvas>
+        </div>
+    </div>
 </div>
-<style>
-    canvas {
-        -moz-user-select: none;
-        -webkit-user-select: none;
-        -ms-user-select: none;
-    }
-</style>
 <script type="text/javascript">
-    $.get("./db/statistic.php?type=appetite", function(data){
-        console.log(data)
-        showChart(data, "food_chart", false);
-    }, "json");
+    $(".unit_control").Segment();
+    var fm_chart = createChart("fm_chart", "配方(勺)", true);
+    var mm_chart = createChart("mm_chart", "母乳(分钟)", false);
+    $(".ui-segment span.option").on("click", function(a){
+        getData($(this).attr("value"));
+    });
+    getData("day");
+    function getData(unit) {
+        $.get("./db/statistic.php?type=appetite&unit="+unit, function(data){
+            console.log(data);
+            var labels = [], fmData = [], mmData = [], label;
+            $.each(data, function(index, value){
+                label = value[unit];
+                if (unit === "day") {
+                    label = new Date(label);
+                    label = (label.getMonth() + 1) + "-" + label.getDate();
+                }
+                labels[index] = label;
+                fmData[index] = parseInt(value.appetite) || 0;
+                mmData[index] = parseInt(value.duration) || 0;
+            });
+            fm_chart.data.labels = labels;
+            mm_chart.data.labels = labels;
+            fm_chart.data.datasets[0].data = fmData;
+            mm_chart.data.datasets[0].data = mmData;
+            fm_chart.update();
+            mm_chart.update();
+        }, "json");
+    }
 
-    function showChart (data, id, reverse) { // no reverse, no label
-        console.log(data);
+    function createChart (id, scaleLabel, reverse) { // no reverse, no label
         var ctx = document.getElementById(id).getContext("2d");
-        var origin = data;
-        data = {
-            labels: $.map(origin, function(item){
-                    return item.date;
-                }),
+        var data = {
+            labels: [],
             datasets: [{
-                label: "mm",
-                data: $.map(origin, function(item){
-                    return parseInt(item.duration || item.appetite);
-                })
+                data: []
             }]
         };
-        console.log(data);
-        new Chart(ctx, {
-            type: 'horizontalBar',
+        return new Chart(ctx, {
+            type: 'bar',
             data: data, 
             options: {
                 responsive: true,
                 hoverAnimationDuration: 400,
                 stacked: false,
-                // legend: {
-                //     display: !reverse
-                // },
-                title:{
-                    // display:!reverse,
-                    text:"Chart.js Bar Chart - Multi Axis"
+                legend: {
+                    display: false
                 },
                 scales: {
-                    xAxes: [{
+                    yAxes: [{
                         type: "linear",
                         display: true,
                         ticks: {
-                            // reverse: reverse
-                        },
-                        // position: "left"
-                    }],
-                    yAxes: [{
-                        type: "time",
-                        // display: !reverse,
-                        stacked: false,
-                        time: {
-                            unit: "day",
-                            max: new Date()
+                            reverse: reverse
                         },
                         scaleLabel: {
-                            display: true
+                            display: true,
+                            labelString: scaleLabel
+                        }
+                    }],
+                    xAxes: [{
+                        type: "category",
+                        ticks: {
+                            display: !reverse
                         },
-                        position: "left",
+                        position: reverse ? "top": "bottom",
                         categoryPercentage: 1
                     }]
                 }

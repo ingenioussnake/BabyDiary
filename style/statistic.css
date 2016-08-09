@@ -1,0 +1,41 @@
+.appetite .hd {
+    display: flex;
+    display: -webkit-flex;
+    padding: 0;
+    background-color: #3cc51f;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+.appetite .hd .page_title{
+    flex-grow: 1;
+    -webkit-flex-grow: 1;
+    text-align: center;
+    color: #fbf9fe;
+    font-size: 1.5rem;
+}
+.appetite .hd a.icon {
+    width: 2rem;
+    height: 2rem;
+    display: inline-block;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    margin-top: auto;
+    margin-bottom: auto;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+.appetite .hd a.icon_back {
+    background-image: url("../images/icons/icon_back.png");
+}
+.appetite .hd a.icon_new {
+    background-image: url("../images/icons/icon_new.png");
+}
+.appetite .chart_container {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+.appetite .chart_container canvas {
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+}

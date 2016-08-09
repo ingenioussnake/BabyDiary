@@ -106,8 +106,7 @@
                         </div>
                         <p class="weui_grid_label">一天</p>
                     </a>
-                    <!-- <a class="weui_grid" href="./statistic/statistic.html"> -->
-                    <a class="weui_grid" href="javascript:;">
+                    <a class="weui_grid" href="./statistic.html">
                         <div class="weui_grid_icon">
                             <i class="icon icon_statistic"></i>
                         </div>
