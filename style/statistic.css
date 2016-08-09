@@ -1,4 +1,4 @@
-.appetite .hd {
+.statistic_container .hd {
     display: flex;
     display: -webkit-flex;
     padding: 0;
@@ -6,14 +6,14 @@
     padding-top: 5px;
     padding-bottom: 5px;
 }
-.appetite .hd .page_title{
+.statistic_container .hd .page_title{
     flex-grow: 1;
     -webkit-flex-grow: 1;
     text-align: center;
     color: #fbf9fe;
     font-size: 1.5rem;
 }
-.appetite .hd a.icon {
+.statistic_container .hd a.icon {
     width: 2rem;
     height: 2rem;
     display: inline-block;
@@ -24,17 +24,17 @@
     background-size: contain;
     background-repeat: no-repeat;
 }
-.appetite .hd a.icon_back {
+.statistic_container .hd a.icon_back {
     background-image: url("../images/icons/icon_back.png");
 }
-.appetite .hd a.icon_new {
+.statistic_container .hd a.icon_new {
     background-image: url("../images/icons/icon_new.png");
 }
-.appetite .chart_container {
+.appetite_quality .chart_container {
     margin-right: 10px;
     margin-left: 10px;
 }
-.appetite .chart_container canvas {
+.appetite_quality .chart_container canvas {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;

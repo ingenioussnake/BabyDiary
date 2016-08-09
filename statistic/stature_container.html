@@ -1,0 +1,38 @@
+<div class="hd">
+    <a class="icon icon_back" href="./index.php"></a>
+    <h1 class="page_title">宝宝好能长</h1>
+    <a class="icon icon_new" href="./action.html?type=height"></a>
+</div>
+<div class="navbar">
+    <div class="bd" style="height: 100%;">
+        <div class="weui_tab">
+            <div class="weui_navbar" id="stature_container">
+                <div class="weui_navbar_item weui_bar_item_on" id="height">
+                    身高
+                </div>
+                <div class="weui_navbar_item" id="weight">
+                    体重
+                </div>
+                <div class="weui_navbar_item" id="comp">
+                    综合
+                </div>
+            </div>
+            <div class="weui_tab_bd stature_container">
+            Coming Soon
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    loadStature($("#stature_container > .weui_bar_item_on").attr("id"));
+
+    $("#stature_container > .weui_navbar_item").on("click", function(){
+        loadStature($(this).attr("id"));
+        $("#stature_container > .weui_navbar_item").removeClass("weui_bar_item_on");
+        $(this).addClass("weui_bar_item_on");
+    });
+
+    function loadStature (type) {
+        // $(".weui_tab_bd.stature_content").load("./statistic/stature_"+type+".html");
+    }
+</script>

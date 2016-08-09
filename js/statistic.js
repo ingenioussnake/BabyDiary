@@ -11,27 +11,13 @@ require.config({
 
 require(["chart", "util", "jquery", "jquery.segment"],
 function(Chart, Util, $){
-    loadStatistic($(".weui_bar_item_on").attr("id"));
+    loadStatistic($("#container > .weui_bar_item_on").attr("id"));
 
-    $("a.weui_tabbar_item").on("click", function(){
+    $("#container > a.weui_tabbar_item").on("click", function(){
         loadStatistic($(this).attr("id"));
     });
 
     function loadStatistic (type) {
-        if (type === "stature") {
-            loadStature();
-        } else {
-            loadAppetite();
-        }
-    }
-
-    function loadStature () {
-        console.log("loadStature");
-        $(".weui_tab_bd").load("./statistic/stature.html");
-    }
-
-    function loadAppetite () {
-        console.log("loadAppetite");
-        $(".weui_tab_bd").load("./statistic/appetite.html");
+        $(".weui_tab_bd.statistic_container").load("./statistic/"+type+"_container.html");
     }
 });

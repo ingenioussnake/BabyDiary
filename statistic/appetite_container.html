@@ -1,0 +1,35 @@
+<div class="hd">
+    <a class="icon icon_back" href="./index.php"></a>
+    <h1 class="page_title">宝宝好能吃</h1>
+    <a class="icon icon_new" href="./action.html?type=dining"></a>
+</div>
+<div class="navbar">
+    <div class="bd" style="height: 100%;">
+        <div class="weui_tab">
+            <div class="weui_navbar" id="appetite_container">
+                <div class="weui_navbar_item weui_bar_item_on" id = "count">
+                    次数
+                </div>
+                <div class="weui_navbar_item" id = "quality">
+                    分量
+                </div>
+            </div>
+            <div class="weui_tab_bd appetite_content">
+
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    loadAppetite($("#appetite_container > .weui_bar_item_on").attr("id"));
+
+    $("#appetite_container > .weui_navbar_item").on("click", function(){
+        loadAppetite($(this).attr("id"));
+        $("#appetite_container > .weui_navbar_item").removeClass("weui_bar_item_on");
+        $(this).addClass("weui_bar_item_on");
+    });
+
+    function loadAppetite (type) {
+        $(".weui_tab_bd.appetite_content").load("./statistic/appetite_"+type+".html");
+    }
+</script>

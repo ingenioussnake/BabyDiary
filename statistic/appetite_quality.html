@@ -1,9 +1,4 @@
-<div class="appetite">
-    <div class="hd">
-        <a class="icon icon_back" href="./index.php"></a>
-        <h1 class="page_title">宝宝好能吃</h1>
-        <a class="icon icon_new" href="./action.html?type=dining"></a>
-    </div>
+<div class="appetite_quality">
     <div class="unit_header">
         <select class="unit_control">
           <option value="day">日</option>
@@ -56,7 +51,8 @@
         var data = {
             labels: [],
             datasets: [{
-                data: []
+                data: [],
+                backgroundColor: reverse ? "#F7464A" : "#46BFBD"
             }]
         };
         return new Chart(ctx, {
