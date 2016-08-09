@@ -42,9 +42,9 @@
     function _getAppetiteCount ($unit) {
         global $dba;
         if ($unit == "week") {
-            $unit_cal = "week(CURRENT_DATE) = week(date)";
+            $unit_cal = "datediff(CURRENT_DATE, date) < 7";
         } else if ($unit == "month") {
-            $unit_cal = "month(CURRENT_DATE) = month(date)";
+            $unit_cal = "datediff(CURRENT_DATE, date) < 30";
         } else {
             $unit_cal = "dayofyear(CURRENT_DATE) = dayofyear(date)";
         }
