@@ -11,9 +11,9 @@ require.config({
 
 require(["chart", "util", "jquery", "jquery.segment"],
 function(Chart, Util, $){
-    loadStatistic($("#container > .weui_bar_item_on").attr("id"));
+    loadStatistic($(".statistic_selecter > .weui_bar_item_on").attr("id"));
 
-    $("#container > a.weui_tabbar_item").on("click", function(){
+    $(".statistic_selecter > a.weui_tabbar_item").on("click", function(){
         loadStatistic($(this).attr("id"));
     });
 
