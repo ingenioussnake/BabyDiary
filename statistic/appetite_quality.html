@@ -15,7 +15,8 @@
 <script type="text/javascript">
 (function(){
     $(".unit_control").Segment();
-    var chart = createChart("chart");
+    var chart = createChart("chart"), scrollable;
+    // document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
     $(".ui-segment span.option").on("click", function(a){
         getData($(this).attr("value"));
     });
@@ -42,6 +43,19 @@
         }, "json");
     }
 
+    function onAnimationComplete () {
+        var iChildrenHeight = $(".chart_container").height(),
+            iParentHeight = $(".charts").height();
+        if (iChildrenHeight <= iParentHeight) {
+            $(".charts").height(iParentHeight);
+            $(".chart_container").height(iParentHeight + 1);
+            scrollable = new IScroll(".charts");
+            scrollable.on('scrollEnd', function(){
+                console.log('scrollEnd', arguments, this.y, this.x, this.directionX, this.directionY, this.currentPage);
+            });
+        }
+    }
+
     function createChart (id) {
         var ctx = document.getElementById(id).getContext("2d");
         var data = {
@@ -64,6 +78,9 @@
                 stacked: false,
                 legend: {
                     display: false
+                },
+                animation: {
+                    onComplete: onAnimationComplete
                 },
                 tooltips: {
                     callbacks: {
