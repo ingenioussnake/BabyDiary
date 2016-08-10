@@ -18,21 +18,89 @@
                 </div>
             </div>
             <div class="weui_tab_bd stature_container">
-            Coming Soon
+                <div class="data_header normal_data_header">
+                    <span>数据：</span>
+                    <select class="data_header_segm">
+                      <option value="normal">普通</option>
+                      <option value="incremental">增量</option>
+                    </select>
+                </div>
+                <div class="data_header comp_data_header" style="display: none;">
+                    <span>数据：</span>
+                    <select class="data_header_segm">
+                      <option value="normal">普通</option>
+                      <option value="bmi">BMI</option>
+                    </select>
+                </div>
+                <div class="data_header who_data_header">
+                    <span>WHO：</span>
+                    <select class="data_header_segm">
+                      <option value="none">关闭</option>
+                      <option value="percentile">百分位数</option>
+                      <option value="z_score">Z值</option>
+                    </select>
+                </div>Coming Soon
             </div>
         </div>
     </div>
 </div>
 <script type="text/javascript">
-    loadStature($("#stature_container > .weui_bar_item_on").attr("id"));
+    $(".data_header_segm").Segment();
+    var type = getType(),
+        incremental = isIncremental(),
+        bmi = isBMI(),
+        who = getWHO(),
+        chart = createChart();
+    loadStature(type, incremental, bmi, who);
 
     $("#stature_container > .weui_navbar_item").on("click", function(){
-        loadStature($(this).attr("id"));
         $("#stature_container > .weui_navbar_item").removeClass("weui_bar_item_on");
         $(this).addClass("weui_bar_item_on");
+        type = getType();
+        if (type === "comp") {
+            $(".comp_data_header").show();
+            $(".normal_data_header").hide();
+        } else {
+            $(".comp_data_header").hide();
+            $(".normal_data_header").show();
+        }
+        loadStature(type, incremental, bmi, who);
     });
 
-    function loadStature (type) {
-        // $(".weui_tab_bd.stature_content").load("./statistic/stature_"+type+".html");
+    $(".normal_data_header .ui-segment span.option").on("click", function(a){
+        incremental = isIncremental();
+        loadStature(type, incremental, bmi, who);
+    });
+
+    $(".comp_data_header .ui-segment span.option").on("click", function(a){
+        bmi = isBMI();
+        loadStature(type, incremental, bmi, who);
+    });
+
+    $(".who_data_header .ui-segment span.option").on("click", function(a){
+        who = getWHO();
+        loadStature(type, incremental, bmi, who);
+    });
+
+    function loadStature (type, incremental, bmi, who) {
+        console.log(type, incremental, bmi, who);
+    }
+
+    function createChart () {}
+
+    function getType () {
+        return $("#stature_container > .weui_bar_item_on").attr("id");
+    }
+
+    function isIncremental () {
+        return $(".normal_data_header span.option.active").attr("value") === "incremental";
+    }
+
+    function isBMI () {
+        return $(".comp_data_header span.option.active").attr("value") === "bmi";
+    }
+
+    function getWHO () {
+        return $(".who_data_header span.option.active").attr("value");
     }
 </script>

@@ -39,7 +39,7 @@
     -webkit-user-select: none;
     -ms-user-select: none;
 }
-.statistic_container .unit_header {
+.statistic_container .unit_header,  .statistic_container .data_header{
     margin: 5px;
 }
 
