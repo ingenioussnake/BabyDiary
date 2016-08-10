@@ -5,7 +5,7 @@
     $dba->connect();
     switch ($type) {
         case 'appetite':
-            echo getAppetite(isset($_GET["unit"]) ? $_GET["unit"] : "day");
+            echo getAppetite();
             break;
 
         case 'count':
@@ -13,7 +13,7 @@
             break;
 
         case 'sleep':
-            echo getSleep(isset($_GET["unit"]) ? $_GET["unit"] : "day");
+            echo getSleep();
             break;
 
         case 'stature':
@@ -22,10 +22,13 @@
     }
     $dba->disconnect();
 
-    function getAppetite ($unit) {
+    function getAppetite () {
         global $dba;
+        $unit = $_GET["unit"];
+        $offset = $_GET["offset"];
+        $size = $_GET["size"];
         $unit_cal = getUnitCalculation($unit, "dining");
-        $stmt = "select fm.".$unit.", fm.appetite, mm.duration from (select ".$unit_cal." as ".$unit.", sum(appetite) as appetite from dining where baby = 1 and food in (select id from food where name='fm' or name='mx') group by ".$unit.") as fm left join (select ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from dining where baby = 1 and food in (select id from food where name='mm' or name='mx') group by ".$unit.") as mm on fm.".$unit." = mm.".$unit." union select mm.".$unit.", fm.appetite, mm.duration from (select ".$unit_cal." as ".$unit.", sum(appetite) as appetite from dining where baby = 1 and food in (select id from food where name='fm' or name='mx') group by ".$unit.") as fm right join (select ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from dining where baby = 1 and food in (select id from food where name='mm' or name='mx') group by ".$unit.") as mm on fm.".$unit." = mm.".$unit." order by ".$unit." desc limit 0, 20;";
+        $stmt = "select fm.".$unit.", fm.appetite, mm.duration from (select ".$unit_cal." as ".$unit.", sum(appetite) as appetite from dining where baby = 1 and food in (select id from food where name='fm' or name='mx') group by ".$unit.") as fm left join (select ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from dining where baby = 1 and food in (select id from food where name='mm' or name='mx') group by ".$unit.") as mm on fm.".$unit." = mm.".$unit." union select mm.".$unit.", fm.appetite, mm.duration from (select ".$unit_cal." as ".$unit.", sum(appetite) as appetite from dining where baby = 1 and food in (select id from food where name='fm' or name='mx') group by ".$unit.") as fm right join (select ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from dining where baby = 1 and food in (select id from food where name='mm' or name='mx') group by ".$unit.") as mm on fm.".$unit." = mm.".$unit." order by ".$unit." desc limit ".$offset.", ".$size.";";
         return json_encode($dba->query($stmt));
     }
 
@@ -59,10 +62,13 @@
         })[0];
     }
 
-    function getSleep ($unit) {
+    function getSleep () {
         global $dba;
+        $unit = $_GET["unit"];
+        $offset = $_GET["offset"];
+        $size = $_GET["size"];
         $unit_cal = getUnitCalculation($unit, "sleep");
-        $stmt = "SELECT ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from sleep where baby = 1 group by ".$unit." order by ".$unit." desc limit 0, 15";
+        $stmt = "SELECT ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from sleep where baby = 1 group by ".$unit." order by ".$unit." desc limit ".$offset.", ".$size.";";
         return json_encode($dba->query($stmt));
     }
 

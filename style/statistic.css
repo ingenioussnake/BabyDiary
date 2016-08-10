@@ -42,3 +42,7 @@
 .statistic_container .unit_header {
     margin: 5px;
 }
+
+.weui_icon_toast:before {
+    content: '\EA0C';
+}

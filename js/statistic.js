@@ -12,6 +12,9 @@ require.config({
 require(["chart", "util", "jquery", "jquery.segment"],
 function(Chart, Util, $){
     loadStatistic($(".statistic_selecter > .weui_bar_item_on").attr("id"));
+    $("#toast_container").load("./fragments/toast.html", function(){
+        $(".weui_toast_content").html("没有更多数据了");
+    });
 
     $(".statistic_selecter > a.weui_tabbar_item").on("click", function(){
         $(".statistic_selecter > a.weui_tabbar_item").removeClass("weui_bar_item_on");

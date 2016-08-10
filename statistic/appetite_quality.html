@@ -14,17 +14,33 @@
 </div>
 <script type="text/javascript">
 (function(){
+    var SCROLL_BOUNCE = 80;
+    var DATA_SIZE = 20;
+    var offset = 0;
+    var unit = "day";
     $(".unit_control").Segment();
     var chart = createChart("chart"), scrollable;
-    // document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+    document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
     $(".ui-segment span.option").on("click", function(a){
-        getData($(this).attr("value"));
+        unit = $(this).attr("value");
+        getData(0);
     });
-    getData("day");
-    function getData(unit) {
-        $.get("./db/statistic.php?type=appetite&unit="+unit, function(data){
+    getData(offset);
+    function getData(off) {
+        $.get("./db/statistic.php", {
+            type: "appetite",
+            unit: unit,
+            offset: off,
+            size: DATA_SIZE
+        }, function(data){
             console.log(data);
             var labels = [], fmData = [], mmData = [], label;
+            if (data.length === 0) {
+                showToast();
+                return;
+            } else {
+                offset = off;
+            }
             $.each(data, function(index, value){
                 label = value[unit];
                 if (unit === "day") {
@@ -49,11 +65,42 @@
         if (iChildrenHeight <= iParentHeight) {
             $(".charts").height(iParentHeight);
             $(".chart_container").height(iParentHeight + 1);
-            scrollable = new IScroll(".charts");
-            scrollable.on('scrollEnd', function(){
-                console.log('scrollEnd', arguments, this.y, this.x, this.directionX, this.directionY, this.currentPage);
-            });
+            scrollable = new IScroll(".charts", {probeType: 2});
+            scrollable.on('scrollStart', onScrollStart);
+            scrollable.on('scroll', onScroll);
+            scrollable.on('scrollEnd', onScrollEnd);
         }
+    }
+
+    function onScrollStart () {
+        this.__scrolling = {
+            direction: this.directionY,
+            start: this.y,
+            size: 0
+        };
+    }
+
+    function onScroll () {
+        if (!!this.__scrolling) {
+            if (this.directionY === this.__scrolling.direction) {
+                this.__scrolling.size = Math.max(this.__scrolling.size, Math.abs(this.y - this.__scrolling.start));
+            }
+        } else {
+            console.log("something bad");
+        }
+    }
+
+    function onScrollEnd () {
+        if (this.__scrolling.size >= SCROLL_BOUNCE) {
+            var off = offset + this.__scrolling.direction * DATA_SIZE;
+            if (off > -1 * DATA_SIZE) {
+                getData(Math.max(0, off));
+            } else {
+                showToast();
+            }
+        }
+        this.__scrolling = null;
+        console.log("end", this.__scrolling, this.y, this.directionY, off);
     }
 
     function createChart (id) {
