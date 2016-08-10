@@ -18,7 +18,7 @@
                 </div>
             </div>
             <div class="weui_tab_bd growth_container">
-                <div class="control_panel" style="display: none;">
+                <div class="control_panel">
                     <div class="data_header normal_data_header">
                         <span>数据：</span>
                         <select class="data_header_segm">
@@ -33,7 +33,7 @@
                           <option value="bmi">BMI</option>
                         </select>
                     </div>
-                    <div class="data_header who_data_header">
+                    <div class="data_header who_data_header" style="display: none;">
                         <span>WHO：</span>
                         <select class="data_header_segm">
                           <option value="none">关闭</option>
@@ -79,7 +79,7 @@
         },
         "comp": {
             "normal": "体重/身高",
-            "special": "BMI"
+            "special": "BMI(kg/m2)"
         }
     };
     var CHART_LEGEND = {
@@ -143,14 +143,30 @@
             who: who
         }, function(data){
             console.log(data);
+            if (type !== "comp" && data.length === 1 && data[0][type] == 0) {
+                showToast();
+            }
             chart.data.datasets[0].data = $.map(data, function(value){
-                return type === "comp" ? {
-                    x: value["height"],
-                    y: value["weight"]
-                } : {
-                    x: value[unit],
-                    y: value[type]
+                var result = {};
+                if (type === "comp") {
+                    if (flag) {
+                        result = {
+                            x: value[unit],
+                            y: value["bmi"]
+                        };
+                    } else {
+                        result = {
+                            x: value["height"],
+                            y: value["weight"]
+                        };
+                    }
+                } else {
+                    result = {
+                        x: value[unit],
+                        y: value[type]
+                    };
                 }
+                return result;
             });
             chart.data.datasets[0].label = CHART_LEGEND[type][flag?"special":"normal"];
             chart.options.scales.xAxes[0].scaleLabel.labelString = CHART_X_SCALE_LABEL[type][unit];
