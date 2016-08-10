@@ -1,4 +1,9 @@
-<div class="appetite_quality">
+<div class="hd">
+    <a class="icon icon_back" href="./index.php"></a>
+    <h1 class="page_title">宝宝好能睡</h1>
+    <a class="icon icon_new" href="./action.html?type=dining"></a>
+</div>
+<div class="sleep">
     <div class="unit_header">
         <select class="unit_control">
           <option value="day">日</option>
@@ -8,22 +13,22 @@
     </div>
     <div class="charts">
         <div class="chart_container">
-            <canvas id="chart" width="200", height="350"></canvas>
+            <canvas id="sleep_chart" width="200", height="400"></canvas>
         </div>
     </div>
 </div>
 <script type="text/javascript">
 (function(){
     $(".unit_control").Segment();
-    var chart = createChart("chart");
+    var chart = createChart("sleep_chart");
     $(".ui-segment span.option").on("click", function(a){
         getData($(this).attr("value"));
     });
     getData("day");
     function getData(unit) {
-        $.get("./db/statistic.php?type=appetite&unit="+unit, function(data){
+        $.get("./db/statistic.php?type=sleep&unit="+unit, function(data){
             console.log(data);
-            var labels = [], fmData = [], mmData = [], label;
+            var labels = [], sleep_data = [], label;
             $.each(data, function(index, value){
                 label = value[unit];
                 if (unit === "day") {
@@ -31,13 +36,11 @@
                     label = (label.getMonth() + 1) + "-" + label.getDate();
                 }
                 labels[index] = label;
-                fmData[index] = -10 * (parseInt(value.appetite) || 0);
-                mmData[index] = parseInt(value.duration) || 0;
+                sleep_data[index] = (parseInt(value.duration) || 0) / 60;
             });
             chart.data.labels = labels;
             chart.data.datasets[0].label = unit;
-            chart.data.datasets[0].data = fmData;
-            chart.data.datasets[1].data = mmData;
+            chart.data.datasets[0].data = sleep_data;
             chart.update();
         }, "json");
     }
@@ -49,9 +52,6 @@
             datasets: [{
                 data: [],
                 backgroundColor: "#F7464A"
-            },{
-                data: [],
-                backgroundColor: "#46BFBD"
             }]
         };
         return new Chart(ctx, {
@@ -81,7 +81,7 @@
                         },
                         label: function (item, data) {
                             var xLabel = item.xLabel;
-                            return (!isNaN(xLabel) && xLabel < 10) ? ("配方" + (xLabel / -10) + "勺") : ("母乳" +  xLabel + "分钟");
+                            return Math.floor(xLabel) + "小时" + (parseInt(xLabel * 60) % 60) + "分钟";
                         }
                     }
                 },
@@ -90,20 +90,17 @@
                         type: "linear",
                         display: true,
                         ticks: {
-                            display: true,
-                            callback: function (value, index, values) {
-                                return (!isNaN(value) && value < 0) ? value / -10 : value;
-                            }
+                            display: true
                         },
-                        stacked: true,
+                        stacked: false,
                         scaleLabel: {
                             display: true,
-                            labelString: "配方(勺) vs 母乳(分钟)"
+                            labelString: "睡眠时间(小时)"
                         }
                     }],
                     yAxes: [{
                         type: "category",
-                        stacked: true
+                        stacked: false
                     }]
                 }
             }

@@ -12,6 +12,10 @@
             echo getAppetiteCount();
             break;
 
+        case 'sleep':
+            echo getSleep(isset($_GET["unit"]) ? $_GET["unit"] : "day");
+            break;
+
         case 'stature':
             echo getStature();
             break;
@@ -20,13 +24,7 @@
 
     function getAppetite ($unit) {
         global $dba;
-        if ($unit == "week") {
-            $unit_cal = "ceiling(datediff(date, (select birthday from baby where dining.baby = id)) / 7)";
-        } else if ($unit == "month") {
-            $unit_cal = "month(date)";
-        } else {
-            $unit_cal = "date";
-        }
+        $unit_cal = getUnitCalculation($unit, "dining");
         $stmt = "select fm.".$unit.", fm.appetite, mm.duration from (select ".$unit_cal." as ".$unit.", sum(appetite) as appetite from dining where baby = 1 and food in (select id from food where name='fm' or name='mx') group by ".$unit.") as fm left join (select ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from dining where baby = 1 and food in (select id from food where name='mm' or name='mx') group by ".$unit.") as mm on fm.".$unit." = mm.".$unit." union select mm.".$unit.", fm.appetite, mm.duration from (select ".$unit_cal." as ".$unit.", sum(appetite) as appetite from dining where baby = 1 and food in (select id from food where name='fm' or name='mx') group by ".$unit.") as fm right join (select ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from dining where baby = 1 and food in (select id from food where name='mm' or name='mx') group by ".$unit.") as mm on fm.".$unit." = mm.".$unit." order by ".$unit." desc limit 0, 15;";
         return json_encode($dba->query($stmt));
     }
@@ -61,5 +59,24 @@
         })[0];
     }
 
+    function getSleep ($unit) {
+        global $dba;
+        $unit_cal = getUnitCalculation($unit, "sleep");
+        $stmt = "SELECT ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from sleep where baby = 1 group by ".$unit." order by ".$unit." desc limit 0, 15";
+        return json_encode($dba->query($stmt));
+    }
+
     function getStature () {}
+
+    function getUnitCalculation ($unit, $table) {
+        $unit_cal = "";
+        if ($unit == "week") {
+            $unit_cal = "ceiling(datediff(date, (select birthday from baby where ".$table.".baby = id)) / 7)";
+        } else if ($unit == "month") {
+            $unit_cal = "month(date)";
+        } else {
+            $unit_cal = "date";
+        }
+        return $unit_cal;
+    }
 ?>

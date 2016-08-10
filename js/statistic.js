@@ -14,6 +14,8 @@ function(Chart, Util, $){
     loadStatistic($(".statistic_selecter > .weui_bar_item_on").attr("id"));
 
     $(".statistic_selecter > a.weui_tabbar_item").on("click", function(){
+        $(".statistic_selecter > a.weui_tabbar_item").removeClass("weui_bar_item_on");
+        $(this).addClass("weui_bar_item_on");
         loadStatistic($(this).attr("id"));
     });
 

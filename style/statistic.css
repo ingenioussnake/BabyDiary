@@ -30,12 +30,15 @@
 .statistic_container .hd a.icon_new {
     background-image: url("../images/icons/icon_new.png");
 }
-.appetite_quality .chart_container {
+.statistic_container .chart_container {
     margin-right: 10px;
     margin-left: 10px;
 }
-.appetite_quality .chart_container canvas {
+.statistic_container .chart_container canvas {
     -moz-user-select: none;
     -webkit-user-select: none;
     -ms-user-select: none;
+}
+.statistic_container .unit_header {
+    margin: 5px;
 }
