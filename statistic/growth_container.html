@@ -1,0 +1,216 @@
+<div class="hd">
+    <a class="icon icon_back" href="./index.php"></a>
+    <h1 class="page_title">宝宝使劲长</h1>
+    <a class="icon icon_new" href="./action.html?type=height"></a>
+</div>
+<div class="navbar">
+    <div class="bd" style="height: 100%;">
+        <div class="weui_tab">
+            <div class="weui_navbar" id="growth_container">
+                <div class="weui_navbar_item weui_bar_item_on" id="height">
+                    身高
+                </div>
+                <div class="weui_navbar_item" id="weight">
+                    体重
+                </div>
+                <div class="weui_navbar_item" id="comp">
+                    综合
+                </div>
+            </div>
+            <div class="weui_tab_bd growth_container">
+                <div class="control_panel" style="display: none;">
+                    <div class="data_header normal_data_header">
+                        <span>数据：</span>
+                        <select class="data_header_segm">
+                          <option value="normal">普通</option>
+                          <option value="incremental">增量</option>
+                        </select>
+                    </div>
+                    <div class="data_header comp_data_header" style="display: none;">
+                        <span>数据：</span>
+                        <select class="data_header_segm">
+                          <option value="normal">普通</option>
+                          <option value="bmi">BMI</option>
+                        </select>
+                    </div>
+                    <div class="data_header who_data_header">
+                        <span>WHO：</span>
+                        <select class="data_header_segm">
+                          <option value="none">关闭</option>
+                          <option value="percentile">百分位数</option>
+                          <option value="z_score">Z值</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="charts">
+                    <div class="chart_container">
+                        <canvas id="growth_chart" width="100" height="300"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+(function(){
+    var CHART_X_SCALE_LABEL = {
+        "height": {
+            "week": "周龄",
+            "month": "月龄"
+        },
+        "weight": {
+            "week": "周龄",
+            "month": "月龄"
+        },
+        "comp": {
+            "height": "身高(cm)",
+            "week": "周龄",
+            "month": "月龄"
+        }
+    };
+    var CHART_Y_SCALE_LABEL = {
+        "height": {
+            "normal": "身高(cm)",
+            "special": "身高增量(cm)"
+        },
+        "weight": {
+            "normal": "体重(kg)",
+            "special": "体重增量(kg)"
+        },
+        "comp": {
+            "normal": "体重/身高",
+            "special": "BMI"
+        }
+    };
+    var CHART_LEGEND = {
+        "height": {
+            "normal": "宝宝身高",
+            "special": "宝宝身高增量"
+        },
+        "weight": {
+            "normal": "宝宝体重",
+            "special": "宝宝体重增量"
+        },
+        "comp": {
+            "normal": "宝宝的体重/身高",
+            "special": "宝宝的BMI"
+        }
+    };
+    $(".data_header_segm").Segment();
+    var type = getType(),
+        flag = getSpecialFlag(type),
+        who = getWHO(),
+        chart = createChart("growth_chart");
+    loadGrowthData();
+
+    $("#growth_container > .weui_navbar_item").on("click", function(){
+        $("#growth_container > .weui_navbar_item").removeClass("weui_bar_item_on");
+        $(this).addClass("weui_bar_item_on");
+        type = getType();
+        if (type === "comp") {
+            $(".comp_data_header").show();
+            $(".normal_data_header").hide();
+        } else {
+            $(".comp_data_header").hide();
+            $(".normal_data_header").show();
+        }
+        flag = getSpecialFlag(type);
+        loadGrowthData();
+    });
+
+    $(".normal_data_header .ui-segment span.option").on("click", function(a){
+        flag = getSpecialFlag(type);
+        loadGrowthData();
+    });
+
+    $(".comp_data_header .ui-segment span.option").on("click", function(a){
+        flag = getSpecialFlag(type);
+        loadGrowthData();
+    });
+
+    $(".who_data_header .ui-segment span.option").on("click", function(a){
+        who = getWHO();
+        loadGrowthData();
+    });
+
+    function loadGrowthData () {
+        console.log(type, flag, who);
+        var unit = (type === "comp" && !flag) ? "height" : "week";
+        $.get("./db/statistic.php", {
+            type: type,
+            unit: unit,
+            flag: flag,
+            who: who
+        }, function(data){
+            console.log(data);
+            chart.data.datasets[0].data = $.map(data, function(value){
+                return type === "comp" ? {
+                    x: value["height"],
+                    y: value["weight"]
+                } : {
+                    x: value[unit],
+                    y: value[type]
+                }
+            });
+            chart.data.datasets[0].label = CHART_LEGEND[type][flag?"special":"normal"];
+            chart.options.scales.xAxes[0].scaleLabel.labelString = CHART_X_SCALE_LABEL[type][unit];
+            chart.options.scales.yAxes[0].scaleLabel.labelString = CHART_Y_SCALE_LABEL[type][flag?"special":"normal"];
+            chart.update();
+        }, "json");
+    }
+
+    function createChart (id) {
+        var ctx = document.getElementById(id).getContext("2d");
+        var data = {
+            datasets: [{data: [], fill: false}]
+        };
+        return new Chart(ctx, {
+            type: 'line',
+            data: data, 
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                hoverAnimationDuration: 400,
+                scales: {
+                    xAxes: [{
+                        type: "linear",
+                        position: "bottom",
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'value'
+                        }
+                    }]
+                }
+            }
+        });
+    }
+
+    function getType () {
+        return $("#growth_container > .weui_bar_item_on").attr("id");
+    }
+
+    function getSpecialFlag (type) {
+        return type === "comp" ? isBMI() : isIncremental();
+    }
+
+    function isIncremental () {
+        return $(".normal_data_header span.option.active").attr("value") === "incremental";
+    }
+
+    function isBMI () {
+        return $(".comp_data_header span.option.active").attr("value") === "bmi";
+    }
+
+    function getWHO () {
+        return $(".who_data_header span.option.active").attr("value");
+    }
+})()
+</script>

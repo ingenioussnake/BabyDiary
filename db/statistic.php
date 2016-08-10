@@ -16,8 +16,13 @@
             echo getSleep();
             break;
 
-        case 'stature':
-            echo getStature();
+        case 'height':
+        case 'weight':
+            echo getGrowth();
+            break;
+
+        case 'comp':
+            echo getCompGrowth();
             break;
     }
     $dba->disconnect();
@@ -72,14 +77,32 @@
         return json_encode($dba->query($stmt));
     }
 
-    function getStature () {}
+    function getGrowth () {
+        global $dba;
+        $type = $_GET["type"];
+        $unit = $_GET["unit"];
+        $unit_cal = getUnitCalculation($unit, $type, true);
+        $stmt = "select ".$unit_cal." as ".$unit.",  MAX(".$type.") as ".$type." from ".$type." where baby = 1 group by ".$unit." order by ".$unit.";";
+        $result = $dba->query($stmt);
+        if ($_GET["flag"] == "true") {
+            //
+        }
+        return json_encode($result);
+    }
 
-    function getUnitCalculation ($unit, $table) {
+    function getCompGrowth () {
+        global $dba;
+        $stmt = "select weight.weight as weight,  height.height as height from height, weight where height.baby = 1 and weight.baby = 1 and height.date = weight.date order by height asc";
+        $result = $dba->query($stmt);
+        return json_encode($result);
+    }
+
+    function getUnitCalculation ($unit, $table, $since = false) {
         $unit_cal = "";
         if ($unit == "week") {
             $unit_cal = "ceiling(datediff(date, (select birthday from baby where ".$table.".baby = id)) / 7)";
         } else if ($unit == "month") {
-            $unit_cal = "month(date)";
+            $unit_cal = $since ? "ceiling(datediff(date, (select birthday from baby where ".$table.".baby = id)) / 30)" : "month(date)";
         } else {
             $unit_cal = "date";
         }

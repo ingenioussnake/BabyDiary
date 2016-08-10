@@ -2,7 +2,7 @@ require.config({
     "paths": {
         "jquery": "./libs/jquery-3.0.1.min",
         "jquery.segment": "./libs/segment",
-        "chart": "./libs/Chart.min"
+        "chart": "./libs/Chart.bundle.min"
     },
     "shim": {
         "jquery.segment": ["jquery"]
