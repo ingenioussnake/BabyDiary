@@ -1,4 +1,4 @@
-.statistic_container .hd {
+.statistic_header {
     display: flex;
     display: -webkit-flex;
     padding: 0;
@@ -6,14 +6,14 @@
     padding-top: 5px;
     padding-bottom: 5px;
 }
-.statistic_container .hd .page_title{
+.statistic_header .page_title{
     flex-grow: 1;
     -webkit-flex-grow: 1;
     text-align: center;
     color: #fbf9fe;
     font-size: 1.5rem;
 }
-.statistic_container .hd a.icon {
+.statistic_header a.icon {
     width: 2rem;
     height: 2rem;
     display: inline-block;
@@ -24,11 +24,14 @@
     background-size: contain;
     background-repeat: no-repeat;
 }
-.statistic_container .hd a.icon_back {
+.statistic_header a.icon_back {
     background-image: url("../images/icons/icon_back.png");
 }
-.statistic_container .hd a.icon_new {
+.statistic_header a.icon_new {
     background-image: url("../images/icons/icon_new.png");
+}
+.statistic_header a.icon_menu {
+    background-image: url("../images/icons/icon_menu.png");
 }
 .statistic_container .chart_container {
     margin-right: 10px;

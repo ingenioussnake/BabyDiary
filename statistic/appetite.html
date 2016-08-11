@@ -1,8 +1,3 @@
-<div class="hd">
-    <a class="icon icon_back" href="./index.php"></a>
-    <h1 class="page_title">宝宝加油吃</h1>
-    <a class="icon icon_new" href="./action.html?type=dining"></a>
-</div>
 <div class="navbar">
     <div class="bd" style="height: 100%;">
         <div class="weui_tab">
@@ -21,6 +16,10 @@
     </div>
 </div>
 <script type="text/javascript">
+(function(){
+    $(".statistic_header h1").html("宝宝加油吃");
+    $("a.new_action").attr("href", "./action.html?type=dining");
+
     loadAppetite($("#appetite_container > .weui_bar_item_on").attr("id"));
 
     $("#appetite_container > .weui_navbar_item").on("click", function(){
@@ -32,4 +31,5 @@
     function loadAppetite (type) {
         $(".weui_tab_bd.appetite_content").load("./statistic/appetite_"+type+".html");
     }
+})()
 </script>

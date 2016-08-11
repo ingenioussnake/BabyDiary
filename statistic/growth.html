@@ -1,8 +1,3 @@
-<div class="hd">
-    <a class="icon icon_back" href="./index.php"></a>
-    <h1 class="page_title">宝宝使劲长</h1>
-    <a class="icon icon_new" href="./action.html?type=height"></a>
-</div>
 <div class="navbar">
     <div class="bd" style="height: 100%;">
         <div class="weui_tab">
@@ -97,6 +92,9 @@
         }
     };
     $(".data_header_segm").Segment();
+
+    $(".statistic_header h1").html("宝宝使劲长");
+    $("a.new_action").attr("href", "./action.html?type=height");
     var type = getType(),
         flag = getSpecialFlag(type),
         who = getWHO(),
@@ -107,6 +105,7 @@
         $("#growth_container > .weui_navbar_item").removeClass("weui_bar_item_on");
         $(this).addClass("weui_bar_item_on");
         type = getType();
+        $("a.new_action").attr("href", "./action.html?type=" + (type === "weight" ? "weight" : "height"));
         if (type === "comp") {
             $(".comp_data_header").show();
             $(".normal_data_header").hide();
