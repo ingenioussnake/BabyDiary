@@ -33,11 +33,13 @@ function(DiningItem, SleepItem, ShitItem, HeightItem, WeightItem, MemoItem, $){
         dateOffset = 0,
         DATE_SIZE = 15;
 
-    $.get("./db/profile.php", {type: "basic"}, function(info){
-        birthday = new Date(info.birthday);
-        $("#baby_name").html(info.name);
-        getDates();
-    }, "json");
+    $("#loading_toast_container").load("./fragments/loading_toast.html", function(){
+        $.get("./db/profile.php", {type: "basic"}, function(info){
+            birthday = new Date(info.birthday);
+            $("#baby_name").html(info.name);
+            getDates();
+        }, "json");
+    });
 
     $("#date_slt").on("change", function(){
         var date = $("#date_slt").val();
@@ -62,6 +64,7 @@ function(DiningItem, SleepItem, ShitItem, HeightItem, WeightItem, MemoItem, $){
     $("#edit_dialog_container").load("./fragments/edit_dialog.html", initEditDialog);
     $("#delete_dialog_container").load("./fragments/delete_dialog.html", initDeleteDialog);
     $("#toast_container").load("./fragments/toast.html");
+
 
     function getDates () {
         $.get("./db/timeline.php", {type: "date", offset: dateOffset, size: DATE_SIZE}, function(data){
@@ -98,6 +101,7 @@ function(DiningItem, SleepItem, ShitItem, HeightItem, WeightItem, MemoItem, $){
 
     function getList () {
         var date = $("#date_slt").val();
+        showLoadingToast();
         $.get("./db/timeline.php", {type: "list", date: date}, function(data){
             $(".timeline").empty();console.log(data);
             if (data.length > 0) {
@@ -108,6 +112,7 @@ function(DiningItem, SleepItem, ShitItem, HeightItem, WeightItem, MemoItem, $){
                 });
                 addItems(data);
             }
+            hideLoadingToast();
         }, "json");
     }
 

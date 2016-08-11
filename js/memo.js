@@ -14,7 +14,6 @@ function(MemoItem, $){
 
     var ACTIVE_COUNT = 15;
     var offset = 0, list = [], operatingItem;
-    getMemos();
     
     $("#memo_list").on("click", function(e){
         var $target =$(e.target),
@@ -35,12 +34,17 @@ function(MemoItem, $){
     $("#edit_dialog_container").load("./fragments/edit_dialog.html", initEditDialog);
     $("#delete_dialog_container").load("./fragments/delete_dialog.html", initDeleteDialog);
     $("#toast_container").load("./fragments/toast.html");
+    $("#loading_toast_container").load("./fragments/loading_toast.html", function(){
+        getMemos();
+    });
 
     
     function getMemos () {
+        showLoadingToast();
         $.get("./db/memo.php", {offset: offset, size: ACTIVE_COUNT, type: "list"}, function(data){
             console.log(data);
             addMemos(data);
+            hideLoadingToast();
         }, "json");
     }
     

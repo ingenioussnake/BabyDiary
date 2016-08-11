@@ -136,6 +136,7 @@
     function loadGrowthData () {
         console.log(type, flag, who);
         var unit = (type === "comp" && !flag) ? "height" : "week";
+        showLoadingToast();
         $.get("./db/statistic.php", {
             type: type,
             unit: unit,
@@ -172,6 +173,7 @@
             chart.options.scales.xAxes[0].scaleLabel.labelString = CHART_X_SCALE_LABEL[type][unit];
             chart.options.scales.yAxes[0].scaleLabel.labelString = CHART_Y_SCALE_LABEL[type][flag?"special":"normal"];
             chart.update();
+            hideLoadingToast();
         }, "json");
     }
 

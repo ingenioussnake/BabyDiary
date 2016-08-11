@@ -12,7 +12,7 @@
         'image/x-png'
     );
     define("MAX_PIC_SIZE", 3000000);
-    $root = get_config("../php.ini")["picture_location"];
+    $root = get_config("../config.ini")["picture_location"];
     $dir = prepareDestination($root, 1, date("Y-m-d"));
     $dba = new DBA();
     $dba->connect();

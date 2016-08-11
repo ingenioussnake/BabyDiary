@@ -1,7 +1,7 @@
 <div class="hd">
     <a class="icon icon_back" href="./index.php"></a>
     <h1 class="page_title">宝宝好好睡</h1>
-    <a class="icon icon_new" href="./action.html?type=dining"></a>
+    <a class="icon icon_new" href="./action.html?type=sleep"></a>
 </div>
 <div class="sleep">
     <div class="unit_header">
@@ -21,6 +21,11 @@
 (function(){
     var SCROLL_BOUNCE = 60;
     var DATA_SIZE = 16;
+    var CHART_Y_SCALE_LABEL = {
+        "day": "日期",
+        "week": "周龄",
+        "month": "月份"
+    };
     var offset = 0;
     var unit = "day";
     $(".unit_control").Segment();
@@ -32,6 +37,7 @@
     });
     getData(offset);
     function getData(off) {
+        showLoadingToast();
         $.get("./db/statistic.php", {
             type: "sleep",
             unit: unit,
@@ -42,6 +48,7 @@
             var labels = [], sleep_data = [], label;
             if (data.length === 0) {
                 showToast();
+                hideLoadingToast();
                 return;
             } else {
                 offset = off;
@@ -58,7 +65,9 @@
             chart.data.labels = labels;
             chart.data.datasets[0].label = unit;
             chart.data.datasets[0].data = sleep_data;
+            chart.options.scales.yAxes[0].scaleLabel.labelString = CHART_Y_SCALE_LABEL[unit];
             chart.update();
+            hideLoadingToast();
         }, "json");
     }
 
@@ -165,7 +174,10 @@
                     }],
                     yAxes: [{
                         type: "category",
-                        stacked: false
+                        stacked: false,
+                        scaleLabel: {
+                            display: true
+                        }
                     }]
                 }
             }

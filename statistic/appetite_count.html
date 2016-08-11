@@ -16,10 +16,12 @@
     var chart = createChart("count_chart");
     $.get("./db/statistic.php?type=count", function(data){
         console.log(data);
+        showLoadingToast();
         chart.data.datasets[2].data = data.day;
         chart.data.datasets[1].data = data.week;
         chart.data.datasets[0].data = data.month;
         chart.update();
+        hideLoadingToast();
     }, "json");
 
     function createChart (id) {

@@ -16,6 +16,10 @@
             echo getSleep();
             break;
 
+        case 'shit':
+            echo getShit();
+            break;
+
         case 'height':
         case 'weight':
             echo getGrowth();
@@ -74,6 +78,16 @@
         $size = $_GET["size"];
         $unit_cal = getUnitCalculation($unit, "sleep");
         $stmt = "SELECT ".$unit_cal." as ".$unit.", sum((time_to_sec(timediff(end, start)) + 86400) % 86400) / 60 as duration from sleep where baby = 1 group by ".$unit." order by ".$unit." desc limit ".$offset.", ".$size.";";
+        return json_encode($dba->query($stmt));
+    }
+
+    function getShit () {
+        global $dba;
+        $unit = $_GET["unit"];
+        $offset = $_GET["offset"];
+        $size = $_GET["size"];
+        $unit_cal = getUnitCalculation($unit, "shit");
+        $stmt = "SELECT ".$unit_cal." as ".$unit.", count(*) as count from shit where baby = 1 group by ".$unit." order by ".$unit." desc limit ".$offset.", ".$size.";";
         return json_encode($dba->query($stmt));
     }
 

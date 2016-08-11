@@ -1,4 +1,9 @@
-<div class="appetite_quality">
+<div class="hd">
+    <a class="icon icon_back" href="./index.php"></a>
+    <h1 class="page_title">宝宝攒大泡</h1>
+    <a class="icon icon_new" href="./action.html?type=shit"></a>
+</div>
+<div class="shit">
     <div class="unit_header">
         <select class="unit_control">
           <option value="day">日</option>
@@ -8,7 +13,7 @@
     </div>
     <div class="charts">
         <div class="chart_container">
-            <canvas id="chart" width="200", height="300"></canvas>
+            <canvas id="shit_chart" width="200", height="350"></canvas>
         </div>
     </div>
 </div>
@@ -24,8 +29,8 @@
     var offset = 0;
     var unit = "day";
     $(".unit_control").Segment();
-    var chart = createChart("chart"), scrollable;
     document.addEventListener('touchmove', function (e) { e.preventDefault(); }, false);
+    var chart = createChart("shit_chart");
     $(".ui-segment span.option").on("click", function(a){
         unit = $(this).attr("value");
         getData(0);
@@ -34,13 +39,13 @@
     function getData(off) {
         showLoadingToast();
         $.get("./db/statistic.php", {
-            type: "appetite",
+            type: "shit",
             unit: unit,
             offset: off,
             size: DATA_SIZE
         }, function(data){
             console.log(data);
-            var labels = [], fmData = [], mmData = [], label;
+            var labels = [], shit_data = [], label;
             if (data.length === 0) {
                 showToast();
                 hideLoadingToast();
@@ -55,13 +60,11 @@
                     label = (label.getMonth() + 1) + "-" + label.getDate();
                 }
                 labels[index] = label;
-                fmData[index] = -10 * (parseInt(value.appetite) || 0);
-                mmData[index] = parseInt(value.duration) || 0;
+                shit_data[index] = parseInt(value.count) || 0;
             });
             chart.data.labels = labels;
             chart.data.datasets[0].label = unit;
-            chart.data.datasets[0].data = fmData;
-            chart.data.datasets[1].data = mmData;
+            chart.data.datasets[0].data = shit_data;
             chart.options.scales.yAxes[0].scaleLabel.labelString = CHART_Y_SCALE_LABEL[unit];
             chart.update();
             hideLoadingToast();
@@ -119,9 +122,6 @@
             datasets: [{
                 data: [],
                 backgroundColor: "#F7464A"
-            },{
-                data: [],
-                backgroundColor: "#46BFBD"
             }]
         };
         return new Chart(ctx, {
@@ -154,7 +154,7 @@
                         },
                         label: function (item, data) {
                             var xLabel = item.xLabel;
-                            return (!isNaN(xLabel) && xLabel < 10) ? ("配方" + (xLabel / -10) + "勺") : ("母乳" +  xLabel + "分钟");
+                            return Math.floor(xLabel) + "次";
                         }
                     }
                 },
@@ -164,19 +164,17 @@
                         display: true,
                         ticks: {
                             display: true,
-                            callback: function (value, index, values) {
-                                return (!isNaN(value) && value < 0) ? value / -10 : value;
-                            }
+                            min: 0
                         },
-                        stacked: true,
+                        stacked: false,
                         scaleLabel: {
                             display: true,
-                            labelString: "配方(勺) vs 母乳(分钟)"
+                            labelString: "拉臭次数"
                         }
                     }],
                     yAxes: [{
                         type: "category",
-                        stacked: true,
+                        stacked: false,
                         scaleLabel: {
                             display: true
                         }
