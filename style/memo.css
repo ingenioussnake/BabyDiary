@@ -80,6 +80,11 @@ ul#memo_list div.memo_item_content {
     -webkit-flex-grow: 1;
     flex-grow: 1;
 }
+ul#memo_list div.memo_item_content div.dayth {
+    text-align: right;
+    color: gray;
+    font-size: 0.9rem;
+}
 ul#memo_list div.title {
     color: #606C8D;
 }

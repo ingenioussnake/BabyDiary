@@ -23,6 +23,7 @@ define(["jquery", "model/BaseItem", "lrz", "util"], function($, BaseItem, lrz, U
                                    '<div class="memo_container">'+
                                         '<div class="memo"></div>'+
                                         '<div class="image_container"></div>'+
+                                        '<div class="dayth"></div>'+
                                    '</div>' +
                                    '<div class="footer">' +
                                         '<a class="icon edit" href="javascript:;"></a>' +

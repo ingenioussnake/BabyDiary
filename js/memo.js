@@ -14,6 +14,7 @@ function(MemoItem, $){
 
     var ACTIVE_COUNT = 15;
     var offset = 0, list = [], operatingItem;
+    var birthday;
     
     $("#memo_list").on("click", function(e){
         var $target =$(e.target),
@@ -35,8 +36,15 @@ function(MemoItem, $){
     $("#delete_dialog_container").load("./fragments/delete_dialog.html", initDeleteDialog);
     $("#toast_container").load("./fragments/toast.html");
     $("#loading_toast_container").load("./fragments/loading_toast.html", function(){
-        getMemos();
+        getBirthDay();
     });
+
+    function getBirthDay() {
+        $.get("./db/profile.php", {type: "basic"}, function(info){
+            birthday = new Date(info.birthday);
+            getMemos();
+        }, "json");
+    }
 
     
     function getMemos () {
@@ -54,6 +62,7 @@ function(MemoItem, $){
             item = new MemoItem(data[i]);
             $item = item.createListItem($list);
             $item.attr("idx", listLength + i);
+            $(".dayth", $item).html("宝宝出生第" + getDayth(data[i].date) + "天");
             list.push(item);
         }
         if (length === ACTIVE_COUNT) {
@@ -61,6 +70,10 @@ function(MemoItem, $){
         } else {
             $("a.more").hide();
         }
+    }
+
+    function getDayth (date) {
+        return (new Date(date) - birthday) / (1000 * 60 * 60 * 24) + 1; // birtyday is the first day (not 0th)
     }
 
     function showEditDialog (item) {
