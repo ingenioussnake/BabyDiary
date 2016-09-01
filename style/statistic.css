@@ -5,6 +5,12 @@
     background-color: #3cc51f;
     padding-top: 5px;
     padding-bottom: 5px;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    width: 100%;
+    z-index: 999;
+    height: 48px;
 }
 .statistic_header .page_title{
     flex-grow: 1;
@@ -32,6 +38,9 @@
 }
 .statistic_header a.icon_menu {
     background-image: url("../images/icons/icon_menu.png");
+}
+.statistic_container {
+    padding-top: 48px;
 }
 .statistic_container .chart_container {
     margin-right: 10px;
