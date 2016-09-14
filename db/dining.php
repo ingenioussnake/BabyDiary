@@ -3,6 +3,7 @@
     $type = isset($_GET["type"]) ? $_GET["type"] : "insert";
     $dba = new DBA();
     $dba->connect();
+    $baby_id = getBaby();
     switch ($type) {
         case 'update':
             echo updateDining();
@@ -19,9 +20,9 @@
     $dba->disconnect();
 
     function insertDining () {
-        global $dba;
+        global $dba, $baby_id;
         $columns = "id, baby";
-        $values = "NULL, 1";
+        $values = "NULL, " . $baby_id;
         $_POST["food"] = getFoodId($_POST["food"]);
         foreach ($_POST as $key => $value) {
             $columns .= ", " . $key;

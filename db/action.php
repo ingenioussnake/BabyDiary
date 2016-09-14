@@ -8,6 +8,7 @@
     $table = $_GET["action"];
     $dba = new DBA();
     $dba->connect();
+    $baby_id = getBaby();
     switch ($type) {
         case 'update':
             echo updateAction($table);
@@ -24,9 +25,9 @@
     $dba->disconnect();
 
     function insert ($table) {
-        global $dba;
+        global $dba, $baby_id;
         $columns = "id, baby";
-        $values = "NULL, 1";
+        $values = "NULL, " . $baby_id;
         foreach ($_POST as $key => $value) {
             $columns .= ", " . $key;
             $values .= ", '" . $value . "'";

@@ -1,3 +1,9 @@
+<?php
+    include "./auth.php";
+    if (!auth_check()) {
+        header("Location: ./login.php");
+    }
+?>
 <!DOCTYPE html>
 <html>
 <head>

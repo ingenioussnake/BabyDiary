@@ -1,4 +1,5 @@
 <?php
+    include "../auth.php";
     class DBA {
         private $db = "baby_diary";
         private $user = "baby";
@@ -48,5 +49,23 @@
         public function insert_id () {
             return $this->connection->insert_id;
         }
+    }
+
+    function getBaby () {
+        if (isset($_SESSION["user"]) && isset($_SESSION["baby_id"])) {
+            return $_SESSION["baby_id"];
+        }
+        $dba = new DBA();
+        $dba->connect();
+        $result = -1;
+        if (isset($_SESSION["user"])) {
+            $baby = $dba->query("SELECT id from baby where parent = '". $_SESSION["user"] ."';", function($row){
+                return $row["id"];
+            });
+            $result = $baby[0];
+            $_SESSION["baby_id"] = $baby[0];
+        }
+        $dba->disconnect();
+        return $result;
     }
 ?>

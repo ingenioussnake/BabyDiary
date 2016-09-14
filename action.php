@@ -1,3 +1,9 @@
+<?php
+    include "./auth.php";
+    if (!auth_check()) {
+        header("Location: ./login.php");
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,7 +38,7 @@
             </div>
             <div class="weui_cell footer">
                 <a id="submit" class="weui_btn weui_btn_primary" href="javascript:;">完成</a>
-                <a id="submit" class="weui_btn weui_btn_primary" href="./index.php">返回</a>
+                <a id="cancel" class="weui_btn weui_btn_primary" href="./index.php">返回</a>
             </div>
         </div>
         <div id="toast_container"></div>

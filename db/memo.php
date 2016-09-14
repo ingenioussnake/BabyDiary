@@ -16,6 +16,7 @@
     $dir = prepareDestination($root, 1, date("Y-m-d"));
     $dba = new DBA();
     $dba->connect();
+    $baby_id = getBaby();
     switch ($type) {
         case 'update':
             echo updateMemo();
@@ -62,8 +63,8 @@
     }
 
     function _insertMemo () {
-        global $dba;
-        $stmt = "INSERT INTO memo VALUES (NULL, 1, '" . $_POST["date"] . "', '" . $_POST["time"] . "', '" . $_POST["title"] . "', '" . $_POST["memo"] . "');";
+        global $dba, $baby_id;
+        $stmt = "INSERT INTO memo VALUES (NULL, ".$baby_id.", '" . $_POST["date"] . "', '" . $_POST["time"] . "', '" . $_POST["title"] . "', '" . $_POST["memo"] . "');";
         $dba->exec($stmt);
         return $dba->insert_id();
     }

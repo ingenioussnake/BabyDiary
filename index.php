@@ -1,3 +1,9 @@
+<?php
+    include "./auth.php";
+    if (!auth_check()) {
+        header("Location: ./login.php");
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,22 +46,6 @@
         }
     </style>
 </head>
-<?php
-
-    $users = array('Miran' => 'Leed');
-
-    $user = $_SERVER['PHP_AUTH_USER'];
-    $pass = $_SERVER['PHP_AUTH_PW'];
-
-    $validated = (in_array($user, array_keys($users))) && ($pass == $users[$user]);
-
-    if (!$validated) {
-        header('WWW-Authenticate: Basic realm="My Realm"');
-        header('HTTP/1.0 401 Unauthorized');
-        echo 'Not authorized';
-        exit;
-    }
-?> 
 <body>
     <div class="container">
         <div class="home slideIn">
@@ -64,55 +54,55 @@
             </div>
             <div class="bd">
                 <div class="weui_grids">
-                    <a class="weui_grid" href="./action.html?type=dining">
+                    <a class="weui_grid" href="./action.php?type=dining">
                         <div class="weui_grid_icon">
                             <i class="icon icon_dining"></i>
                         </div>
                         <p class="weui_grid_label">吃饭</p>
                     </a>
-                    <a class="weui_grid" href="./action.html?type=sleep">
+                    <a class="weui_grid" href="./action.php?type=sleep">
                         <div class="weui_grid_icon">
                             <i class="icon icon_sleep"></i>
                         </div>
                         <p class="weui_grid_label">睡觉</p>
                     </a>
-                    <a class="weui_grid" href="./action.html?type=shit">
+                    <a class="weui_grid" href="./action.php?type=shit">
                         <div class="weui_grid_icon">
                             <i class="icon icon_shit"></i>
                         </div>
                         <p class="weui_grid_label">拉臭</p>
                     </a>
-                    <a class="weui_grid" href="./action.html?type=height">
+                    <a class="weui_grid" href="./action.php?type=height">
                         <div class="weui_grid_icon">
                             <i class="icon icon_height"></i>
                         </div>
                         <p class="weui_grid_label">身高</p>
                     </a>
-                    <a class="weui_grid" href="./action.html?type=weight">
+                    <a class="weui_grid" href="./action.php?type=weight">
                         <div class="weui_grid_icon">
                             <i class="icon icon_weight"></i>
                         </div>
                         <p class="weui_grid_label">体重</p>
                     </a>
-                    <a class="weui_grid" href="./memo.html">
+                    <a class="weui_grid" href="./memo.php">
                         <div class="weui_grid_icon">
                             <i class="icon icon_memo"></i>
                         </div>
                         <p class="weui_grid_label">心情</p>
                     </a>
-                    <a class="weui_grid" href="./timeline.html">
+                    <a class="weui_grid" href="./timeline.php">
                         <div class="weui_grid_icon">
                             <i class="icon icon_timeline"></i>
                         </div>
                         <p class="weui_grid_label">一天</p>
                     </a>
-                    <a class="weui_grid" href="./statistic.html">
+                    <a class="weui_grid" href="./statistic.php">
                         <div class="weui_grid_icon">
                             <i class="icon icon_statistic"></i>
                         </div>
                         <p class="weui_grid_label">统计</p>
                     </a>
-                    <a class="weui_grid" href="./profile.html">
+                    <a class="weui_grid" href="./profile.php">
                         <div class="weui_grid_icon">
                             <i class="icon icon_profile"></i>
                         </div>
