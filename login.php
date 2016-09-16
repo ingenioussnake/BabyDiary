@@ -5,7 +5,7 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $data = array_map(function($item){return test_input($item);}, $_POST);
         if (login($data)) {
-            auth_add($data['username']);
+            // auth_add($data['username']); //added during login
             $auth = true;
         } else {
             $error = true;
@@ -31,6 +31,7 @@
         curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, false);
         $result = curl_exec($ch);
+        echo $result;
         curl_close($ch);
         return $result;
     }
@@ -111,7 +112,8 @@
                 </div>
             </div>
             <div class="weui_cell footer">
-                <a id="submit" class="weui_btn weui_btn_primary" href="javascript:;">提交</a>
+                <a id="register" class="weui_btn weui_btn_primary" href="./register.php">注册</a>
+                <a id="submit" class="weui_btn weui_btn_primary" href="javascript:;">登录</a>
             </div>
         <?php } else { ?>
             <div class="hd">

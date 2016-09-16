@@ -22,7 +22,7 @@
             auth_add($user[0]);
             return true;
         } else {
-            return true;
+            return false;
         }
     }
 

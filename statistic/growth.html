@@ -94,7 +94,7 @@
     $(".data_header_segm").Segment();
 
     $(".statistic_header h1").html("宝宝使劲长");
-    $("a.new_action").attr("href", "./action.html?type=height");
+    $("a.new_action").attr("href", "./action.php?type=height");
     var type = getType(),
         flag = getSpecialFlag(type),
         who = getWHO(),
@@ -105,7 +105,7 @@
         $("#growth_container > .weui_navbar_item").removeClass("weui_bar_item_on");
         $(this).addClass("weui_bar_item_on");
         type = getType();
-        $("a.new_action").attr("href", "./action.html?type=" + (type === "weight" ? "weight" : "height"));
+        $("a.new_action").attr("href", "./action.php?type=" + (type === "weight" ? "weight" : "height"));
         if (type === "comp") {
             $(".comp_data_header").show();
             $(".normal_data_header").hide();

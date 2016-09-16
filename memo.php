@@ -22,7 +22,7 @@
             <div class="hd">
                 <a class="icon icon_back" href="./index.php"></a>
                 <h1 class="page_title">心情点滴</h1>
-                <a class="icon icon_new" href="./action.html?type=memo"></a>
+                <a class="icon icon_new" href="./action.php?type=memo"></a>
 
             </div>
             <div class="bd">
