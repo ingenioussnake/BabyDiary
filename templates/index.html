@@ -1,0 +1,97 @@
+{% extends "jumbotron.html" %}
+
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        i.icon {
+            background-size: contain;
+        }
+
+        .icon_dining {
+            background-image: url("./images/icons/icon_dining.png");
+        }
+        .icon_sleep {
+            background-image: url("./images/icons/icon_sleep.png");
+        }
+        .icon_shit {
+            background-image: url("./images/icons/icon_shit.png");
+        }
+        .icon_height {
+            background-image: url("./images/icons/icon_height.png");
+        }
+        .icon_weight {
+            background-image: url("./images/icons/icon_weight.png");
+        }
+        .icon_memo {
+            background-image: url("./images/icons/icon_memo.png");
+        }
+        .icon_timeline {
+            background-image: url("./images/icons/icon_timeline.png");
+        }
+        .icon_statistic {
+            background-image: url("./images/icons/icon_statistic.png");
+        }
+        .icon_profile {
+            background-image: url("./images/icons/icon_profile.png");
+        }
+    </style>
+{% endblock %}
+
+{% block area %}
+    <div class="weui_grids">
+        <a class="weui_grid" href="./action.php?type=dining">
+            <div class="weui_grid_icon">
+                <i class="icon icon_dining"></i>
+            </div>
+            <p class="weui_grid_label">吃饭</p>
+        </a>
+        <a class="weui_grid" href="./action.php?type=sleep">
+            <div class="weui_grid_icon">
+                <i class="icon icon_sleep"></i>
+            </div>
+            <p class="weui_grid_label">睡觉</p>
+        </a>
+        <a class="weui_grid" href="./action.php?type=shit">
+            <div class="weui_grid_icon">
+                <i class="icon icon_shit"></i>
+            </div>
+            <p class="weui_grid_label">拉臭</p>
+        </a>
+        <a class="weui_grid" href="./action.php?type=height">
+            <div class="weui_grid_icon">
+                <i class="icon icon_height"></i>
+            </div>
+            <p class="weui_grid_label">身高</p>
+        </a>
+        <a class="weui_grid" href="./action.php?type=weight">
+            <div class="weui_grid_icon">
+                <i class="icon icon_weight"></i>
+            </div>
+            <p class="weui_grid_label">体重</p>
+        </a>
+        <a class="weui_grid" href="./memo.php">
+            <div class="weui_grid_icon">
+                <i class="icon icon_memo"></i>
+            </div>
+            <p class="weui_grid_label">心情</p>
+        </a>
+        <a class="weui_grid" href="./timeline.php">
+            <div class="weui_grid_icon">
+                <i class="icon icon_timeline"></i>
+            </div>
+            <p class="weui_grid_label">一天</p>
+        </a>
+        <a class="weui_grid" href="./statistic.php">
+            <div class="weui_grid_icon">
+                <i class="icon icon_statistic"></i>
+            </div>
+            <p class="weui_grid_label">统计</p>
+        </a>
+        <a class="weui_grid" href="./profile.php">
+            <div class="weui_grid_icon">
+                <i class="icon icon_profile"></i>
+            </div>
+            <p class="weui_grid_label">档案</p>
+        </a>
+    </div>
+{% endblock %}

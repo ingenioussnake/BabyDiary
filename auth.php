@@ -21,4 +21,10 @@
         unset($_SESSION["login"]);
         session_destroy();
     }
+
+    function do_auth_check () {
+        if (!auth_check()) {
+            header("Location: /login.php");
+        }
+    }
 ?>

@@ -1,0 +1,26 @@
+{% extends "jumbotron.html" %}
+
+{% block head %}
+    {{ parent() }}
+    <style type="text/css">
+        .footer:before {
+            border: 0;
+        }
+        .footer {
+            padding-top: 0;
+        }
+        .footer a.weui_btn {
+            width: 40%;
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+    </style>
+    <script type="text/javascript" src="./js/libs/require.js" data-main="./js/action" ></script>
+{% endblock %}
+
+{% block footer %}
+    <div class="weui_cell footer">
+        <a id="submit" class="weui_btn weui_btn_primary" href="javascript:;">完成</a>
+        <a id="cancel" class="weui_btn weui_btn_primary" href="./index.php">返回</a>
+    </div>
+{% endblock %}

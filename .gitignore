@@ -1,0 +1,13 @@
+# Ignore .gitignore and target folders
+src/*/.gitignore
+src/*/target/
+/target
+/dist
+/cache
+
+# Ignore npm files
+/node_modules
+
+# Ignore composer files
+/composer.lock
+/vendor

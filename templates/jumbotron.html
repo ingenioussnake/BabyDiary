@@ -1,0 +1,11 @@
+{% extends "skeleton.html" %}
+
+{% block content %}
+    <div class="hd">
+        <h1 class="page_title">{{ page_title }}</h1>
+    </div>
+    <div class="bd">
+        {% block area %}{% endblock %}
+    </div>
+    {% block footer %}{% endblock %}
+{% endblock %}
