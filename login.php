@@ -5,7 +5,7 @@
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $data = array_map(function($item){return test_input($item);}, $_POST);
         if (login($data)) {
-            // auth_add($data['username']); //added during login
+            auth_add($data['username']); //cannot added during login
             $auth = true;
         } else {
             $error = true;
@@ -31,7 +31,6 @@
         curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_HEADER, false);
         $result = curl_exec($ch);
-        echo $result;
         curl_close($ch);
         return $result;
     }

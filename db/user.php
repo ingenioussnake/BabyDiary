@@ -19,7 +19,7 @@
         global $dba;
         $user = $dba->query("SELECT username FROM user WHERE username = '". $username ."' and password = '". md5($password) ."';", function($row){ return $row["username"]; });
         if (count($user) > 0) {
-            auth_add($user[0]);
+            // auth_add($user[0]);
             return true;
         } else {
             return false;
