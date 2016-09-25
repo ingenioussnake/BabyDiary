@@ -36,7 +36,7 @@ function(DiningItem, SleepItem, ShitItem, HeightItem, WeightItem, MemoItem, $){
     $("#loading_toast_container").load("./fragments/loading_toast.html", function(){
         $.get("./db/profile.php", {type: "basic"}, function(info){
             birthday = new Date(info.birthday);
-            $("#baby_name").html(info.name);
+            $(".page_title").html(info.name);
             getDates();
         }, "json");
     });
