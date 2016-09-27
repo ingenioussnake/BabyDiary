@@ -24,7 +24,7 @@
 
     function do_auth_check () {
         if (!auth_check()) {
-            header("Location: /login.php");
+            header("Location: ./login.php");
         }
     }
 ?>
